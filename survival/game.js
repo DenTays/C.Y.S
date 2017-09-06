@@ -1,138 +1,147 @@
 //75874
 
 
-var pjs = new PointJS('2d', 700, 700, {backgroundColor : '#383F5B'});
+let pjs = new PointJS('2d', 700, 700, {backgroundColor : '#383F5B'});
 
-var game = pjs.game;
-var camera = pjs.camera;
-var point = pjs.vector.point;
-var OOP = pjs.OOP;
-var math = pjs.math;
-var mouse = pjs.mouseControl.initMouseControl();
-var key = pjs.keyControl.initKeyControl();
+let game = pjs.game;
+let camera = pjs.camera;
+let point = pjs.vector.point;
+let OOP = pjs.OOP;
+let math = pjs.math;
+let mouse = pjs.mouseControl.initMouseControl();
+let key = pjs.keyControl.initKeyControl();
 
 pjs.mouseControl.setCursorImage("img/cursor1.png");
 
-var color = ['red', 'yellow', 'blue', 'black', 'orange'];
-var index = pjs.math.random(0, color.length-1);
+let color = ['red', 'yellow', 'blue', 'black', 'orange'];
+let index = pjs.math.random(0, color.length-1);
 
-var width = game.getWH().w;
-var height = game.getWH().h;
+let width = game.getWH().w;
+let height = game.getWH().h;
 
-var music = pjs.audio.newAudio('msc/001.mp3', 1);
+let music = pjs.audio.newAudio('msc/001.mp3', 1);
 
-var max = 4000;
+let max = 4000;
 
 
 
-var fon = game.newImageObject({
+let fon = game.newImageObject({
 	file : 'img/bg.jpg', 
 	x: 0, 
 	y: 0, 
 	w: max, 
 	h: max
-})
+});
 
-var message = game.newTextObject({
+let message = game.newTextObject({
 	x : 0, y : 0,
 	size : 20,
 	color : 'black'
-}) 
+}) ;
 
-var map = game.newRectObject({
+let map = game.newRectObject({
 	w : 150,
 	h : 150,
 	fillColor : 'black',
 	alpha : 0.5
-})
+});
 
-var cell = game.newCircleObject({
+let cell = game.newCircleObject({
 	radius : 2,
 	fillColor : 'white'
-})
+});
+let fireCell = game.newCircleObject({
+	radius : 3,
+	fillColor : 'orange'
+});
 
-var player = game.newCircleObject({
+let player = game.newCircleObject({
 	x : max/2, y : max/2,
 	radius : 20,
 	fillColor : color[index]
-})
+});
 
-var button = game.newImageObject({
+let button = game.newImageObject({
 	x : 150, y : 150,
 	w : 80, h : 80,
 	file : 'img/cancel.png',
 	alpha : 0.8
-})
-var inventory = game.newRectObject({
+});
+let inventory = game.newRectObject({
 	x : 0, y : 0,
 	w : width-10, h : height-100,
 	fillColor : 'grey',
 	alpha : 0.95
 })
-var boat = game.newImageObject({
+let boat = game.newImageObject({
 	x : -130, y : 10,
 	file : 'img/boat.png',
 	w : 60, h : 100,
 	angle : -90
 })
 
-var log = game.newImageObject({
+let log = game.newImageObject({
 	x : 20, y : 40,
 	w : 70, h : 70,
 	file : 'img/log.png'
 })
 
-var stone = game.newImageObject({
+let stone = game.newImageObject({
 	x : 20, y : 40,
 	w : 70, h : 70,
 	file : 'img/stone.png'
-})
+});
 
-var coinBB = game.newImageObject({
+let coinBB = game.newImageObject({
 	x : 20, y : 40,
 	w : 70, h : 70,
 	file : 'img/coin.png'
-})
+});
 
-var heart = game.newImageObject({
+let heart = game.newImageObject({
 	x : 20, y : 40,
 	w : 70, h : 70,
 	file : 'img/hearts.png'
-})
+});
+let trophy = game.newImageObject({
+	x : 20, y : 40,
+	w : 70, h : 70,
+	file : 'img/trophy.png'
+});
 
 
 //enemies
-var rect = game.newImageObject({
+let rect = game.newImageObject({
 	x : math.random(0, max), y : math.random(0, max),
 	w : 70, h : 70,
-	file : 'img/spider.png'
-})
-var rect2 = game.newImageObject({
+	file : 'img/behold.png'
+});
+let rect2 = game.newImageObject({
 	x : math.random(0, max), y : math.random(0, max),
 	w : 70, h : 70,
-	file : 'img/spider.png'
-})
-var rect3 = game.newImageObject({
+	file : 'img/behold.png'
+});
+let rect3 = game.newImageObject({
 	x : math.random(0, max), y : math.random(0, max),
 	w : 70, h : 70,
-	file : 'img/spider.png'
+	file : 'img/behold.png'
 })
 
 
 
-var dist = game.newRectObject({
+let dist = game.newRectObject({
 	x : 0, y : 0,
 	w : 1000, h : 1000,
 	fillColor : 'black',
 	alpha : 0
 });
-var dist2 = game.newRectObject({
+let dist2 = game.newRectObject({
 	x : 0, y : 0,
 	w : 1000, h : 1000,
 	fillColor : 'black',
 	alpha : 0
 });
-var dist3 = game.newRectObject({
+let dist3 = game.newRectObject({
 	x : 0, y : 0,
 	w : 1000, h : 1000,
 	fillColor : 'black',
@@ -144,7 +153,7 @@ var dist3 = game.newRectObject({
 //enemies end
 
 
-var sticks = []
+let sticks = []
 OOP.fillArr(sticks, 80, function () {
 	return game.newRectObject({
 		position : point(math.random(50, max - 50), math.random(50, max - 50)),
@@ -155,7 +164,7 @@ OOP.fillArr(sticks, 80, function () {
 		angle : math.random(0, 179)
 	});
 })
-var rocks = []
+let rocks = []
 OOP.fillArr(rocks, 70, function () {
 	return game.newRectObject({
 		position : point(math.random(50, max - 50), math.random(50, max - 50)),
@@ -165,7 +174,7 @@ OOP.fillArr(rocks, 70, function () {
 		strokeWidth : 1
 	});
 })
-var coins = []
+let coins = []
 OOP.fillArr(coins, 50, function () {
 	return game.newCircleObject({
 		position : point(math.random(50, max - 50), math.random(50, max - 50)),
@@ -174,7 +183,7 @@ OOP.fillArr(coins, 50, function () {
 		strokeWidth : 2, strokeColor : 'black'
 	})
 })
-var trees = [];
+let trees = [];
 OOP.fillArr(trees, 90, function () {
 	return game.newImageObject({
 		position : point(math.random(50, max - 50), math.random(50, max - 50)),
@@ -183,7 +192,7 @@ OOP.fillArr(trees, 90, function () {
 		alpha : 0.9
 	})
 });
-var bushes = [];
+let bushes = [];
 OOP.fillArr(bushes, 100, function () {
 	return game.newImageObject({
 		position : point(math.random(0, max), math.random(0, max)),
@@ -192,7 +201,7 @@ OOP.fillArr(bushes, 100, function () {
 		alpha : 0.95
 	});
 });
-var stones = [];
+let stones = [];
 OOP.fillArr(stones, 100, function () {
 	return game.newRectObject({
 		position : point(math.random(0, max), math.random(0, max)),
@@ -202,7 +211,7 @@ OOP.fillArr(stones, 100, function () {
 		strokeWidth : 1
 	});
 });
-var mushroom = [];
+let mushroom = [];
 OOP.fillArr(mushroom, 30, function () {
 	return game.newImageObject({
 		position : point(math.random(0, max - 50), math.random(0, max - 50)),
@@ -214,28 +223,47 @@ OOP.fillArr(mushroom, 30, function () {
 
 
 
-var tomahawk = game.newImageObject({
+let tomahawk = game.newImageObject({
 	x : 10, y : height-90,
 	w : 70, h : 70,
 	file : 'img/tomahawk.png',
 	alpha : 0.2
 })
-var armor = game.newImageObject({
+let armor = game.newImageObject({
 	x : 10, y : height-90,
 	w : 70, h : 70,
 	file : 'img/armor.png',
 	alpha : 0.2
 })
-var bo = game.newImageObject({
+let bo = game.newImageObject({
 	x : 10, y : height-90,
 	w : 70, h : 70,
 	file : 'img/bo.png',
 	alpha : 0.2
-})
-var fire = game.newImageObject({
+});
+let robe = game.newImageObject({
+	x : 10, y : height-90,
+	w : 70, h : 70,
+	file : 'img/robe.png',
+	alpha : 0.2
+});
+let shield = game.newImageObject({
+	x : 10, y : height-90,
+	w : 70, h : 70,
+	file : 'img/shield.png',
+	alpha : 0.2
+});
+let fire = game.newImageObject({
 	x : -8000, y : 10,
 	w : 70, h : 70,
 	file : 'img/fire.png'
+});
+
+
+let cold = game.newImageObject({
+	x : 10, y : 10,
+	w : 70, h : 70,
+	file : 'img/cold.png'
 })
 
 
@@ -244,28 +272,35 @@ var fire = game.newImageObject({
 
 
 
-var coinCount = 0;
-var stickCount = 0;
-var rockCount = 0;
-var health = 100;
-var healthe1 = 90,
-		healthe2 = 90,
-		healthe3 = 90;
-var uron = 1;
-var uron2 = 0;
+let coinCount = 100;
+let stickCount = 100;
+let rockCount = 100;
+let health = 100;
+let healthe1 = 80,
+		healthe2 = 80,
+		healthe3 = 80;
+let uron = 1;
+let uron2 = 0;
 
-var dmg = 1;
+let dmg = 1;
+let dmg2 = 0.5;
 
-var armorH = false;
-var tomahawkH = false;
-var boH = false;
-var fireH = false;
+let armorH = false;
+let tomahawkH = false;
+let boH = false;
+let robeH = false;
+let shieldH = false;
+let fireH = false;
 
-var enemyVision1 = false,
+let enemyVision1 = false,
 	enemyVision2 = false,
 	enemyVision3 = false;
 
-var ubiystva = 0;	
+let ubiystva = 3;
+
+let temperature = 25;
+
+let n = 0.1;	
 
 
 
@@ -352,6 +387,7 @@ game.newLoop('game', function () {
 
 	if (player.isDynamicIntersect((rect.getDynamicBox()))) {
 		health-=dmg;
+		health-=dmg2;
 		healthe1 -= uron;
 		healthe1 -= uron2;
 		message.reStyle({
@@ -361,6 +397,7 @@ game.newLoop('game', function () {
 
 	if (player.isDynamicIntersect((rect2.getDynamicBox()))) {
 		health-=dmg;
+		health-=dmg2;
 		healthe2 -= uron;
 		healthe2 -= uron2;
 		message.reStyle({
@@ -370,6 +407,7 @@ game.newLoop('game', function () {
 
 	if (player.isDynamicIntersect((rect3.getDynamicBox()))) {
 		health-=dmg;
+		health-=dmg2;
 		healthe3 -= uron;
 		healthe3 -= uron2;
 		message.reStyle({
@@ -419,6 +457,7 @@ game.newLoop('game', function () {
 	inventory.draw()
 	fon.draw();
 	fire.draw()
+
 	
 	dist.setPosition(point(rect.x-dist.w/2+rect.w/2, rect.y-dist.h/2+rect.h/2));
 	dist.draw();
@@ -448,6 +487,10 @@ game.newLoop('game', function () {
 	armor.draw()
 	bo.setPositionS(point(170, height-80));
 	bo.draw()
+	robe.setPositionS(point(250, height-80));
+	robe.draw()
+	shield.setPositionS(point(330, height-80));
+	shield.draw()
 
 	log.setPositionS(point(20, 20))
 	log.draw()
@@ -462,7 +505,15 @@ game.newLoop('game', function () {
 	cell.setPositionS(point(width-120, height-120))
 	cell.move(point(player.getPosition(1).x/40, player.getPosition(1).y/40))
 	cell.draw()
-	message.draw()
+	if (fireH) {
+		fireCell.setPositionS(point(width-120, height-120))
+		fireCell.move(point(fire.getPosition(1).x/40, fire.getPosition(1).y/40));
+		fireCell.draw();
+	}
+
+
+	cold.setPositionS(point(10, 95));
+	cold.draw();
 
 	pjs.brush.drawTextS({
   		text : stickCount,
@@ -486,6 +537,13 @@ game.newLoop('game', function () {
   		text : health,
   		x :492, y : 65,
   		color : "red",
+  		size : 25
+	});
+
+	pjs.brush.drawTextS({
+  		text : 'C: '+temperature,
+  		x :80, y : 120,
+  		color : "black",
   		size : 25
 	});
 	
@@ -518,7 +576,7 @@ game.newLoop('game', function () {
     		m.y = math.random(0, max)
     	}
     });
-    var speed = 2; 
+    let speed = 2; 
 
     if (player.isIntersect(bushes)) {
     	enemyVision1 = true;
@@ -540,7 +598,6 @@ game.newLoop('game', function () {
 		if (player.y > dist.y && player.y < rect.y) {
 			rect.y -= speed
 		}
-		rect.rotate(player.getPositionC());
 
 	}
 	if (player.isIntersect(dist2)) {
@@ -557,7 +614,6 @@ game.newLoop('game', function () {
 		if (player.y > dist2.y && player.y < rect2.y) {
 			rect2.y -= speed
 		}
-		rect2.rotate(player.getPositionC());
 	}
 	if (player.isIntersect(dist3)) {
 		if (player.x > dist3.x && player.x < rect3.x) {
@@ -572,7 +628,6 @@ game.newLoop('game', function () {
 		if (player.y > dist3.y && player.y < rect3.y) {
 			rect3.y -= speed
 		}
-		rect3.rotate(player.getPositionC());0
 	}
 
 	
@@ -607,6 +662,22 @@ game.newLoop('game', function () {
 			bo.setAlpha(0.9);
 		}
 	}
+	if (stickCount >= 4 && coinCount >= 50 && robeH == false) {
+		if (mouse.isPeekObject('LEFT', robe)) {
+			robeH = true;
+			stickCount -= 4;
+			coinCount -= 50;
+			robe.setAlpha(0.9);
+		}
+	}
+	if (stickCount >= 15 && rockCount >= 20 && shieldH == false) {
+		if (mouse.isPeekObject('LEFT', shield)) {
+			shieldH = true;
+			stickCount -= 15;
+			rockCount -= 20;
+			shield.setAlpha(0.9);
+		}
+	}
 
 	if (tomahawkH) {
 		uron = 2
@@ -616,6 +687,12 @@ game.newLoop('game', function () {
 	}
 	if (boH) {
 		uron2 = 0.5
+	}
+	if (robeH) {
+		n = 0.01;
+	}
+	if (shieldH) {
+		dmg2 = 0;
 	}
 	if (pjs.mouseControl.isInObject(tomahawk) && tomahawkH == false) {
 		tomahawk.setAlpha(0.7)
@@ -639,6 +716,20 @@ game.newLoop('game', function () {
 	} else {
 		bo.setAlpha(0.2);
 	};
+	if (pjs.mouseControl.isInObject(robe) && robeH == false) {
+		robe.setAlpha(0.7);
+	} else if (robeH) {
+		robe.setAlpha(0.9);
+	} else {
+		robe.setAlpha(0.2);
+	};
+	if (pjs.mouseControl.isInObject(shield) && shieldH == false) {
+		shield.setAlpha(0.7);
+	} else if (shieldH) {
+		shield.setAlpha(0.9);
+	} else {
+		shield.setAlpha(0.2);
+	};
 
 	
 	if (mouse.isPress('RIGHT') && stickCount >= 10 && fireH == false) {
@@ -652,7 +743,20 @@ game.newLoop('game', function () {
 		if (health < 100) {
 			health += 0.01;
 		};
+
+		if (temperature <= 25) {
+			temperature = 25;
+		};
  	};
+ 	
+
+ 	if (temperature >= -15) {
+ 	temperature -= n;
+ 	};
+ 	if (temperature <= -15) {
+ 		health -= 0.01;
+ 	}
+ 	temperature = 1 * temperature.toFixed(2);
 
  	if (mouse.isPeekObject('LEFT', button)) {
  		game.setLoop('menu')
@@ -668,11 +772,18 @@ game.newLoop('game', function () {
 
 
 game.newLoop('menu', function () {
-	game.fill('black')
+	game.fill('black');
 
 
 	if (mouse.isPress('LEFT')) {
 		game.setLoop('game');
+	};
+
+
+
+	trophy.setPositionS(point(20, 10));
+	if (ubiystva >= 3) {
+		trophy.draw();
 	};
 });
 
