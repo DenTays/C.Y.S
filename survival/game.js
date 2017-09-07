@@ -35,7 +35,7 @@ let fon = game.newImageObject({
 
 let message = game.newTextObject({
 	x : 0, y : 0,
-	size : 20,
+	size : 25,
 	color : 'black'
 }) ;
 
@@ -128,6 +128,31 @@ let rect3 = game.newImageObject({
 })
 
 
+let pig = game.newImageObject({
+	x : math.random(0, max), y : math.random(0, max),
+	w : 70, h : 70,
+	file : 'img/pig.png'
+});
+let pig2 = game.newImageObject({
+	x : math.random(0, max), y : math.random(0, max),
+	w : 70, h : 70,
+	file : 'img/pig.png'
+});
+
+let distp = game.newRectObject({
+	x : 0, y : 0,
+	w : 500, h : 500,
+	fillColor : 'black',
+	alpha : 0
+});
+let distp2 = game.newRectObject({
+	x : 0, y : 0,
+	w : 500, h : 500,
+	fillColor : 'black',
+	alpha : 0
+});
+
+
 
 let dist = game.newRectObject({
 	x : 0, y : 0,
@@ -177,7 +202,7 @@ OOP.fillArr(rocks, 70, function () {
 let coins = []
 OOP.fillArr(coins, 50, function () {
 	return game.newCircleObject({
-		position : point(math.random(50, max - 50), math.random(50, max - 50)),
+		position : point(math.random(150, max - 150), math.random(150, max - 150)),
 		radius : 15,
 		fillColor : 'gold',
 		strokeWidth : 2, strokeColor : 'black'
@@ -186,7 +211,7 @@ OOP.fillArr(coins, 50, function () {
 let trees = [];
 OOP.fillArr(trees, 90, function () {
 	return game.newImageObject({
-		position : point(math.random(50, max - 50), math.random(50, max - 50)),
+		position : point(math.random(150, max - 150), math.random(150, max - 150)),
 		w : 250, h : 250,
 		file : 'img/tree.png',
 		alpha : 0.9
@@ -195,7 +220,7 @@ OOP.fillArr(trees, 90, function () {
 let bushes = [];
 OOP.fillArr(bushes, 100, function () {
 	return game.newImageObject({
-		position : point(math.random(0, max), math.random(0, max)),
+		position : point(math.random(150, max - 150), math.random(150, max - 150)),
 		width : 150, height : 150,
 		file : 'img/bush.png',
 		alpha : 0.95
@@ -204,7 +229,7 @@ OOP.fillArr(bushes, 100, function () {
 let stones = [];
 OOP.fillArr(stones, 100, function () {
 	return game.newRectObject({
-		position : point(math.random(0, max), math.random(0, max)),
+		position : point(math.random(150, max - 150), math.random(150, max - 150)),
 		w : 100, h : 100,
 		fillColor : '#474747',
 		strokeColor : 'black',
@@ -214,7 +239,7 @@ OOP.fillArr(stones, 100, function () {
 let mushroom = [];
 OOP.fillArr(mushroom, 30, function () {
 	return game.newImageObject({
-		position : point(math.random(0, max - 50), math.random(0, max - 50)),
+		position : point(math.random(150, max - 150), math.random(150, max - 150)),
 		w : 40, h : 40,
 		file : 'img/mushroom.png',
 		angle : math.random(0, 359)
@@ -279,6 +304,9 @@ let health = 100;
 let healthe1 = 80,
 		healthe2 = 80,
 		healthe3 = 80;
+let healthp1 = 50,
+	healthp2 = 50;
+
 let uron = 1;
 let uron2 = 0;
 
@@ -338,6 +366,42 @@ player.collision = function (arr) {
 		}
 	});
 };
+pig.collision = function (arr) {
+	OOP.forArr(arr, function (el) {
+		if (pig.isIntersect(el)) {
+			if (pig.dx > 0 && pig.x < el.x) {
+				pig.dx = 0
+			}
+			if (pig.dx < 0 && pig.x > el.x) {
+				pig.dx = 0
+			}
+			if (pig.dy > 0 && pig.y < el.y) {
+				pig.dy = 0
+			}
+			if (pig.dy < 0 && pig.y > el.y) {
+				pig.dy = 0
+			}
+		}
+	});
+};
+pig2.collision = function (arr) {
+	OOP.forArr(arr, function (el) {
+		if (pig2.isIntersect(el)) {
+			if (pig2.dx > 0 && pig2.x < el.x) {
+				pig2.dx = 0
+			}
+			if (pig2.dx < 0 && pig2.x > el.x) {
+				pig2.dx = 0
+			}
+			if (pig2.dy > 0 && pig2.y < el.y) {
+				pig2.dy = 0
+			}
+			if (pig2.dy < 0 && pig2.y > el.y) {
+				pig2.dy = 0
+			}
+		}
+	});
+};
 
 
 
@@ -349,7 +413,8 @@ game.newLoop('game', function () {
 	}
 	
 	music.play();
-	message.setPositionS(point(10, 130))
+	message.setPositionS(point(190, 120))
+
 	
 	message.reStyle({
 		text : '-'
@@ -372,16 +437,6 @@ game.newLoop('game', function () {
 	game.clear();
 	camera.moveTimeC(player, 20);
 
-	if (health <= 50) {
-		message.reStyle({
-		text : 'Фух, мне что-то не хорошо...'
-		})
-	}
-	if (health <= 20) {
-		message.reStyle({
-		text : 'Как же плохо...'
-		})
-	};
 
 
 	if (player.isDynamicIntersect((rect.getDynamicBox()))) {
@@ -414,6 +469,22 @@ game.newLoop('game', function () {
 		})
 	}
 
+
+	if (player.isDynamicIntersect((pig.getDynamicBox()))) {
+		healthp1 -= uron;
+		healthp1 -= uron2;
+		message.reStyle({
+			text : 'Противник: '+ healthp1
+		})
+	}
+	if (player.isDynamicIntersect((pig2.getDynamicBox()))) {
+		healthp2 -= uron;
+		healthp2 -= uron2;
+		message.reStyle({
+			text : 'Противник: '+ healthp2
+		})
+	}
+
 	if (healthe1 <= 0) {
 		rect.x = math.random(0, max);
 		rect.y = math.random(0, max);
@@ -421,9 +492,7 @@ game.newLoop('game', function () {
 		ubiystva += 1;
 		console.log(ubiystva);
 		if (coinCount<=500)
-		coinCount+=100;
-
-		health+=20;
+		coinCount+=15;
 	}
 	if (healthe2 <= 0) {
 		rect2.x = math.random(0, max);
@@ -432,8 +501,7 @@ game.newLoop('game', function () {
 		ubiystva += 1;
 		console.log(ubiystva);
 		if (coinCount<=500)
-		coinCount+=100;
-		health+=20;
+		coinCount+=15;
 	}
 	if (healthe3 <= 0) {
 		rect3.x = math.random(0, max);
@@ -442,20 +510,75 @@ game.newLoop('game', function () {
 		ubiystva += 1;
 		console.log(ubiystva);
 		if (coinCount<=500)
-		coinCount+=100;
+		coinCount+=15;
+	}
+
+	if (healthp1 <= 0) {
+		pig.x = math.random(0, max);
+		pig.y = math.random(0, max);
+		healthp1 = 50;
+		ubiystva += 1;
+		console.log(ubiystva);
+		if (coinCount<=500)
+		coinCount+=5;
+		health+=20;
+	}
+	if (healthp2 <= 0) {
+		pig2.x = math.random(0, max);
+		pig2.y = math.random(0, max);
+		healthp2 = 50;
+		ubiystva += 1;
+		console.log(ubiystva);
+		if (coinCount<=500)
+		coinCount+=5;
 		health+=20;
 	}
 
 
-	player.keyMove()
+	if (player.isIntersect(distp)) {
+		if (player.x > distp.x && player.x < pig.x) {
+			pig.setFlip(false, false);
+				pig.x += 1;
+		} else if (player.x > distp.x && player.x > pig.x) {
+			pig.setFlip(true, false);
+			pig.x -= 1;
+		};
+		if (player.y > distp.y && player.y < pig.y) {
+			pig.y += 1;
+		} else if (player.y > distp.y && player.y > pig.y) {
+			pig.y -= 1;
+		};
+	};
+
+
+	if (player.isIntersect(distp2)) {
+		if (player.x > distp2.x && player.x < pig2.x) {
+			pig2.setFlip(false, false);
+			pig2.x += 1;
+		} else if (player.x > distp2.x && player.x > pig2.x) {
+			pig2.setFlip(true, false);
+			pig2.x -= 1;
+		};
+		if (player.y > distp2.y && player.y < pig2.y) {
+			pig2.y += 1;
+		} else if (player.y > distp2.y && player.y > pig2.y) {
+			pig2.y -= 1;
+		};
+	};
+
+
+	player.keyMove();
 	player.collision(stones);
-	player.move(point(player.dx, player.dy))
+	player.move(point(player.dx, player.dy));
+
+	pig.collision(stones);
+	pig2.collision(stones);
 
 	inventory.setPositionS(point(5, 50));
-	inventory.setVisible( false )
-	inventory.draw()
+	inventory.setVisible( false );
+	inventory.draw();
 	fon.draw();
-	fire.draw()
+	fire.draw();
 
 	
 	dist.setPosition(point(rect.x-dist.w/2+rect.w/2, rect.y-dist.h/2+rect.h/2));
@@ -464,13 +587,19 @@ game.newLoop('game', function () {
 	dist2.draw();
 	dist3.setPosition(point(rect3.x-dist3.w/2+rect3.w/2, rect3.y-dist3.h/2+rect3.h/2));
 	dist3.draw();
+	distp.setPosition(point(pig.x-distp.w/2+pig.w/2, pig.y-distp.h/2+pig.h/2));
+	distp.draw();
+	distp2.setPosition(point(pig2.x-distp2.w/2+pig2.w/2, pig2.y-distp2.h/2+pig2.h/2));
+	distp2.draw();
 	OOP.drawArr(coins);
 	OOP.drawArr(mushroom);
 	OOP.drawArr(stones);
 	OOP.drawArr(sticks);
 	OOP.drawArr(rocks);
 	player.draw();
-	boat.draw()
+	pig.draw();
+	pig2.draw();
+	boat.draw();
 	rect.draw();
 	rect2.draw();
 	rect3.draw();
@@ -479,24 +608,24 @@ game.newLoop('game', function () {
 	map.setPositionS(point(width-120, height-120));
 	map.draw();
 	button.setPositionS(point(width-82, 1));
-	button.draw()
+	button.draw();
 	tomahawk.setPositionS(point(10, height-80));
-	tomahawk.draw()
+	tomahawk.draw();
 	armor.setPositionS(point(90, height-80));
-	armor.draw()
+	armor.draw();
 	bo.setPositionS(point(170, height-80));
-	bo.draw()
+	bo.draw();
 	robe.setPositionS(point(250, height-80));
-	robe.draw()
+	robe.draw();
 	shield.setPositionS(point(330, height-80));
-	shield.draw()
+	shield.draw();
 
-	log.setPositionS(point(20, 20))
-	log.draw()
-	stone.setPositionS(point(150, 20))
-	stone.draw()
-	coinBB.setPositionS(point(280, 20))
-	coinBB.draw()
+	log.setPositionS(point(20, 20));
+	log.draw();
+	stone.setPositionS(point(150, 20));
+	stone.draw();
+	coinBB.setPositionS(point(280, 20));
+	coinBB.draw();
 	heart.setPositionS(point(410, 20))
 	heart.draw()
 	
@@ -545,6 +674,8 @@ game.newLoop('game', function () {
   		color : "black",
   		size : 25
 	});
+
+		message.draw()
 	
 
 	pjs.vector.moveCollisionAngle(player, coins, 0, function (player, coin) {
@@ -628,6 +759,7 @@ game.newLoop('game', function () {
 			rect3.y -= speed
 		}
 	}
+
 
 	
 	
