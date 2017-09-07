@@ -272,9 +272,9 @@ let cold = game.newImageObject({
 
 
 
-let coinCount = 100;
-let stickCount = 100;
-let rockCount = 100;
+let coinCount = 0;
+let stickCount = 0;
+let rockCount = 0;
 let health = 100;
 let healthe1 = 80,
 		healthe2 = 80,
@@ -296,7 +296,7 @@ let enemyVision1 = false,
 	enemyVision2 = false,
 	enemyVision3 = false;
 
-let ubiystva = 3;
+let ubiystva = 0;
 
 let temperature = 25;
 
@@ -780,8 +780,9 @@ game.newLoop('menu', function () {
 
 
 
-	trophy.setPositionS(point(20, 10));
+	
 	if (ubiystva >= 3) {
+		trophy.setPositionS(point(20, 10));
 		trophy.draw();
 	};
 });
