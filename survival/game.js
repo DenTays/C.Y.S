@@ -51,20 +51,20 @@ let cell = game.newCircleObject({
 	fillColor : 'white'
 });
 let fireCell = game.newCircleObject({
-	radius : 3,
+	radius : 2,
 	fillColor : 'orange'
 });
 
 let player = game.newCircleObject({
-	x : max/2, y : max/2,
+	x : 50, y : 40,
 	radius : 20,
 	fillColor : color[index]
 });
 
-let button = game.newImageObject({
+let settings = game.newImageObject({
 	x : 150, y : 150,
 	w : 80, h : 80,
-	file : 'img/cancel.png',
+	file : 'img/house.png',
 	alpha : 0.8
 });
 let inventory = game.newRectObject({
@@ -74,7 +74,7 @@ let inventory = game.newRectObject({
 	alpha : 0.95
 })
 let boat = game.newImageObject({
-	x : -130, y : 10,
+	x : -60, y : 10,
 	file : 'img/boat.png',
 	w : 60, h : 100,
 	angle : -90
@@ -108,6 +108,13 @@ let trophy = game.newImageObject({
 	w : 70, h : 70,
 	file : 'img/trophy.png'
 });
+let progress = pjs.resources.getProgress();
+let progressD = game.newRectObject({
+	x : 20, y : 40,
+	w : progress, h : 30,
+	fillColor : 'white'
+});
+
 
 
 //enemies
@@ -179,7 +186,7 @@ let dist3 = game.newRectObject({
 
 
 let sticks = []
-OOP.fillArr(sticks, 80, function () {
+OOP.fillArr(sticks, 50, function () {
 	return game.newRectObject({
 		position : point(math.random(50, max - 50), math.random(50, max - 50)),
 		w : 10, h : 60,
@@ -190,7 +197,7 @@ OOP.fillArr(sticks, 80, function () {
 	});
 })
 let rocks = []
-OOP.fillArr(rocks, 70, function () {
+OOP.fillArr(rocks, 40, function () {
 	return game.newRectObject({
 		position : point(math.random(50, max - 50), math.random(50, max - 50)),
 		w : 30, h : 30,
@@ -200,9 +207,9 @@ OOP.fillArr(rocks, 70, function () {
 	});
 })
 let coins = []
-OOP.fillArr(coins, 50, function () {
+OOP.fillArr(coins, 60, function () {
 	return game.newCircleObject({
-		position : point(math.random(150, max - 150), math.random(150, max - 150)),
+		position : point(math.random(30, max - 150), math.random(30, max - 150)),
 		radius : 15,
 		fillColor : 'gold',
 		strokeWidth : 2, strokeColor : 'black'
@@ -211,7 +218,7 @@ OOP.fillArr(coins, 50, function () {
 let trees = [];
 OOP.fillArr(trees, 90, function () {
 	return game.newImageObject({
-		position : point(math.random(150, max - 150), math.random(150, max - 150)),
+		position : point(math.random(30, max - 150), math.random(30, max - 150)),
 		w : 250, h : 250,
 		file : 'img/tree.png',
 		alpha : 0.9
@@ -220,7 +227,7 @@ OOP.fillArr(trees, 90, function () {
 let bushes = [];
 OOP.fillArr(bushes, 100, function () {
 	return game.newImageObject({
-		position : point(math.random(150, max - 150), math.random(150, max - 150)),
+		position : point(math.random(30, max - 150), math.random(30, max - 150)),
 		width : 150, height : 150,
 		file : 'img/bush.png',
 		alpha : 0.95
@@ -229,7 +236,7 @@ OOP.fillArr(bushes, 100, function () {
 let stones = [];
 OOP.fillArr(stones, 100, function () {
 	return game.newRectObject({
-		position : point(math.random(150, max - 150), math.random(150, max - 150)),
+		position : point(math.random(30, max - 150), math.random(30, max - 150)),
 		w : 100, h : 100,
 		fillColor : '#474747',
 		strokeColor : 'black',
@@ -237,9 +244,9 @@ OOP.fillArr(stones, 100, function () {
 	});
 });
 let mushroom = [];
-OOP.fillArr(mushroom, 30, function () {
+OOP.fillArr(mushroom, 20, function () {
 	return game.newImageObject({
-		position : point(math.random(150, max - 150), math.random(150, max - 150)),
+		position : point(math.random(30, max - 150), math.random(30, max - 150)),
 		w : 40, h : 40,
 		file : 'img/mushroom.png',
 		angle : math.random(0, 359)
@@ -596,19 +603,19 @@ game.newLoop('game', function () {
 	OOP.drawArr(stones);
 	OOP.drawArr(sticks);
 	OOP.drawArr(rocks);
-	player.draw();
+	boat.draw();
 	pig.draw();
 	pig2.draw();
-	boat.draw();
+	player.draw();
+	OOP.drawArr(bushes);
+	OOP.drawArr(trees);
 	rect.draw();
 	rect2.draw();
 	rect3.draw();
-	OOP.drawArr(bushes);
-	OOP.drawArr(trees);
 	map.setPositionS(point(width-120, height-120));
 	map.draw();
-	button.setPositionS(point(width-82, 1));
-	button.draw();
+	settings.setPositionS(point(width-100, 15));
+	settings.draw();
 	tomahawk.setPositionS(point(10, height-80));
 	tomahawk.draw();
 	armor.setPositionS(point(90, height-80));
@@ -631,11 +638,11 @@ game.newLoop('game', function () {
 	
 
 	cell.setPositionS(point(width-120, height-120))
-	cell.move(point(player.getPosition(1).x/40, player.getPosition(1).y/40))
+	cell.move(point(player.getPosition(1).x/35, player.getPosition(1).y/35))
 	cell.draw()
 	if (fireH) {
 		fireCell.setPositionS(point(width-120, height-120))
-		fireCell.move(point(fire.getPosition(1).x/40, fire.getPosition(1).y/40));
+		fireCell.move(point(fire.getPosition(1).x/35, fire.getPosition(1).y/35));
 		fireCell.draw();
 	}
 
@@ -889,7 +896,7 @@ game.newLoop('game', function () {
  	}
  	temperature = 1 * temperature.toFixed(2);
 
- 	if (mouse.isPeekObject('LEFT', button)) {
+ 	if (mouse.isPeekObject('LEFT', settings)) {
  		game.setLoop('menu')
  	}
 
@@ -906,17 +913,26 @@ game.newLoop('menu', function () {
 	game.fill('black');
 
 
-	if (mouse.isPress('LEFT')) {
+	
+
+	var start = game.newTextObject({
+		text : 'Survive...',
+		x : width / 2 - 65, y : height / 2 - 40,
+		size : 30, 
+		color : 'white'
+	});
+	start.draw();
+
+	if (mouse.isPeekObject('LEFT', start)) {
 		game.setLoop('game');
 	};
-
-
-
 	
 	if (ubiystva >= 3) {
 		trophy.setPositionS(point(20, 10));
 		trophy.draw();
 	};
+	progressD.setPositionS(point(50, 50))
+	progressD.draw()
 });
 
 
