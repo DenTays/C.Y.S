@@ -10,6 +10,7 @@ let OOP = pjs.OOP;
 let math = pjs.math;
 let mouse = pjs.mouseControl.initMouseControl();
 let key = pjs.keyControl.initKeyControl();
+let system = pjs.system;
 
 pjs.mouseControl.setCursorImage("img/cursor1.png");
 
@@ -55,10 +56,10 @@ let fireCell = game.newCircleObject({
 	fillColor : 'orange'
 });
 
-let player = game.newCircleObject({
+let player = game.newImageObject({
 	x : 50, y : 40,
-	radius : 20,
-	fillColor : color[index]
+	w : 40, h : 60,
+	file : 'img/player.png'
 });
 
 let settings = game.newImageObject({
@@ -100,7 +101,7 @@ let coinBB = game.newImageObject({
 
 let heart = game.newImageObject({
 	x : 20, y : 40,
-	w : 70, h : 70,
+	w : 60, h : 60,
 	file : 'img/hearts.png'
 });
 let trophy = game.newImageObject({
@@ -108,6 +109,12 @@ let trophy = game.newImageObject({
 	w : 70, h : 70,
 	file : 'img/trophy.png'
 });
+
+let craftinfo = game.newTextObject({
+	x : 10, y : height - 100,
+	size : 15, color : 'black',
+	alpha : 1, text : '-'
+})
 let progress = pjs.resources.getProgress();
 
 
@@ -287,9 +294,21 @@ let teleport = game.newImageObject({
 	file : 'img/teleport.png',
 	alpha : 0.2
 });
+let skillrunning1 = game.newImageObject({
+	x : 10, y : height-90,
+	w : 90, h : 90,
+	file : 'img/run.png',
+	alpha : 0.5
+});
+let skillrunning2 = game.newImageObject({
+	x : 10, y : height-90,
+	w : 90, h : 90,
+	file : 'img/run2.png',
+	alpha : 0.5
+});
 let fire = game.newImageObject({
 	x : -8000, y : 10,
-	w : 70, h : 70,
+	w : 80, h : 80,
 	file : 'img/fire.png'
 });
 
@@ -314,12 +333,25 @@ let rectHealth = game.newRectObject({
 	strokeColor : 'black'
 });
 
+let progressxp = game.newRectObject({
+	x : 20, y : 40,
+	w : 0, h : 28,
+	fillColor : 'lime'
+});
+let rectxp = game.newRectObject({
+	x : 20, y : 40,
+	w : 202, h : 30,
+	fillColor : 'white',
+	strokeWidth : 2,
+	strokeColor : 'black'
+});
 
 
 
-let coinCount = 100;
-let stickCount = 100;
-let rockCount = 100;
+
+let coinCount = 0;
+let stickCount = 0;
+let rockCount = 0;
 let health = 100;
 let healthe1 = 80,
 		healthe2 = 80,
@@ -340,10 +372,14 @@ let robeH = false;
 let shieldH = false;
 let fireH = false;
 let teleportH = false;
+let runS1 = false;
+let runS2 = false;
 
 let enemyVision1 = false,
 	enemyVision2 = false,
 	enemyVision3 = false;
+
+let xp = 0;
 
 let ubiystva = 0;
 
@@ -353,21 +389,22 @@ let isDying = false;
 
 let n = 0.1;	
 let isBuyed = false;
+let speedplayer = 2.5;
 
 
 player.keyMove = function (){
 		player.dx = player.dy = 0;
 		if (key.isDown('W')) {
-			player.dy-=3;
+			player.dy-=speedplayer;
 		};
 		if (key.isDown('S')) {
-			player.dy+=3;
+			player.dy+=speedplayer;
 		};
 		if (key.isDown('D')) {
-			player.dx+=3;
+			player.dx+=speedplayer;
 		};
 		if (key.isDown('A')) {
-			player.dx-=3;
+			player.dx-=speedplayer;
 		};
 	};
 
@@ -432,7 +469,7 @@ game.newLoop('game', function () {
 
 
 	if (health <= 0) {
-		location.reload()
+		game.setLoop('gameover')
 	}
 	
 	//music.play();
@@ -458,7 +495,7 @@ game.newLoop('game', function () {
 	};
 
 	game.clear();
-	camera.moveTimeC(player, 20);
+	camera.moveTimeC(player, 10);
 
 
 
@@ -522,6 +559,10 @@ game.newLoop('game', function () {
 		console.log(ubiystva);
 		if (coinCount<=500)
 		coinCount+=15;
+		if (xp < 200) {
+			xp += 3;
+			progressxp.w += 3
+		}
 	}
 	if (healthe2 <= 0) {
 		rect2.x = math.random(0, max);
@@ -531,6 +572,10 @@ game.newLoop('game', function () {
 		console.log(ubiystva);
 		if (coinCount<=500)
 		coinCount+=15;
+		if (xp < 200) {
+			xp += 3;
+			progressxp.w += 3
+		}
 	}
 	if (healthe3 <= 0) {
 		rect3.x = math.random(0, max);
@@ -540,6 +585,10 @@ game.newLoop('game', function () {
 		console.log(ubiystva);
 		if (coinCount<=500)
 		coinCount+=15;
+		if (xp < 200) {
+			xp += 3;
+			progressxp.w += 3
+		}
 	}
 
 	if (healthp1 <= 0) {
@@ -550,8 +599,18 @@ game.newLoop('game', function () {
 		console.log(ubiystva);
 		if (coinCount<=500)
 		coinCount+=5;
-		health+=20;
-		progressHealth.w += 20;
+		if (health >= 80) {
+			health = 100;
+			progressHealth.w = 100;
+		} else if (health < 80) {
+			health += 20;
+			progressHealth.w += 20;
+		}
+		if (xp < 200) {
+			xp += 2;
+			progressxp.w += 2
+		}
+		
 	}
 	if (healthp2 <= 0) {
 		pig2.x = math.random(0, max);
@@ -559,10 +618,20 @@ game.newLoop('game', function () {
 		healthp2 = 50;
 		ubiystva += 1;
 		console.log(ubiystva);
-		if (coinCount<=500)
-		coinCount+=5;
-		health+=20;
-		progressHealth.w += 20;
+		if (coinCount<=500) {
+			coinCount+=5;
+		}
+		if (health >= 80) {
+			health = 100;
+			progressHealth.w = 100;
+		} else if (health < 80) {
+			health += 20;
+			progressHealth.w += 20;
+		}
+		if (xp < 200) {
+			xp += 2;
+			progressxp.w += 2
+		}
 	}
 
 
@@ -650,7 +719,7 @@ game.newLoop('game', function () {
 	rect3.draw();
 	map.setPositionS(point(width-120, height-120));
 	map.draw();
-	settings.setPositionS(point(width-100, 15));
+	settings.setPositionS(point(width-90, 5));
 	settings.draw();
 	tomahawk.setPositionS(point(10, height-80));
 	tomahawk.draw();
@@ -669,7 +738,7 @@ game.newLoop('game', function () {
 	stone.draw();
 	coinBB.setPositionS(point(280, 20));
 	coinBB.draw();
-	heart.setPositionS(point(410, 20))
+	heart.setPositionS(point(15, 170))
 	heart.draw()
 	
 
@@ -681,12 +750,24 @@ game.newLoop('game', function () {
 		fireCell.move(point(fire.getPosition(1).x/35, fire.getPosition(1).y/35));
 		fireCell.draw();
 	}
-	rectHealth.setPositionS(point(490, 43));
-	rectHealth.draw()
-	progressHealth.setPositionS(point(492, 45));
-	progressHealth.draw()
+	rectHealth.setPositionS(point(80, 184));
+	rectHealth.draw();
+	progressHealth.setPositionS(point(82, 186));
+	progressHealth.draw();
 
+	rectxp.setPositionS(point(400, 20));
+	rectxp.draw();
+	progressxp.setPositionS(point(402, 22));
+	progressxp.draw();
 
+	pjs.brush.drawTextS({
+		x : 450, y : 30,
+		size : 15, color : 'black',
+		text : 'EXPERIENCE'
+	})
+
+	craftinfo.setPositionS(point(10, height - 100));
+	craftinfo.draw();
 
 	cold.setPositionS(point(10, 95));
 	cold.draw();
@@ -719,6 +800,8 @@ game.newLoop('game', function () {
 	});
 
 	message.draw()
+
+	player.rotate(mouse.getPosition())
 	
 
 	pjs.vector.moveCollisionAngle(player, coins, 0, function (player, coin) {
@@ -726,32 +809,58 @@ game.newLoop('game', function () {
     	coinCount++
     	coin.x = math.random(0, max)
     	coin.y = math.random(0, max)
+    	if (xp < 200) {
+			xp += 0.5;
+			progressxp.w += 0.5;
+		}
     	}
+    	
     });
     pjs.vector.moveCollisionAngle(player, sticks, 0, function (player, stick) {
     	if (stickCount <= 500) {
     	stickCount++
     	stick.x = math.random(0, max)
     	stick.y = math.random(0, max)
+    	if (xp < 200) {
+			xp += 0.5;
+			progressxp.w += 0.5;
+		}
     	}
+    	
     });
     pjs.vector.moveCollisionAngle(player, rocks, 0, function (player, rock) {
     	if (rockCount <= 500) {
     	rockCount++
     	rock.x = math.random(0, max)
     	rock.y = math.random(0, max)
+    	if (xp < 200) {
+			xp += 0.5;
+			progressxp.w += 0.5;
+		}
     	}
+    	
     });
     pjs.vector.moveCollisionAngle(player, mushroom, 0, function (player, m) {
-    	if (health < 100) {
-    		if (health >= 95) {
-    			health = 100;
-    		}
-    		health+=5
-    		progressHealth.w += 5
-    		m.x = math.random(0, max)
-    		m.y = math.random(0, max)
-    	}
+    	if (health >= 95 && health < 100) {
+    		health = 100;
+    		progressHealth.w = 100;
+	    	m.x = math.random(0, max);
+	    	m.y = math.random(0, max);
+	    	if (xp < 200) {
+			xp += 0.5;
+			progressxp.w += 0.5;
+			}
+    	} else if (health < 95) {
+	    	health+=5;
+	    	progressHealth.w += 5;
+	    	m.x = math.random(0, max);
+	    	m.y = math.random(0, max);
+	    	if (xp < 200) {
+			xp += 0.5;
+			progressxp.w += 0.5;
+			}
+    	};
+    	
     });
     let speed = 2; 
 
@@ -808,12 +917,24 @@ game.newLoop('game', function () {
 	}
 
 
-	
+	let skillsenter = game.newTextObject({
+		x : width - 200, y : 72,
+		size : 25, color : 'white',
+		text : 'Skills'
+	});
+	pjs.brush.drawRectS({
+		x : width - 170, y : 54,
+		w : 70, h : 29,
+		fillColor : 'black', strokeColor : 'white',
+		strokeWidth : 2
+	})
+	skillsenter.setPositionS(point(width - 168, 60))
+	skillsenter.draw();
+	if (mouse.isPeekObject('LEFT', skillsenter)) {
+		game.setLoop('skills')
+	}
 	
 
-	
-
-	
 
 
 	if (stickCount >= 10 && rockCount >= 8 && tomahawkH == false) {
@@ -861,49 +982,84 @@ game.newLoop('game', function () {
 		uron = 2;
 	}
 	if (armorH) {
-		dmg = 1;
+		dmg = 0.5;
+		player.setImage( "img/playerinarmor.png" );
 	}
 	if (boH) {
 		uron2 = 1;
 	}
 	if (robeH) {
-		n = 0.01;
+		n = 0.01;	
+	}
+	if (robeH && armorH === false) {
+		player.setImage( "img/playerinrobe.png" );
 	}
 	if (shieldH) {
 		dmg2 = 0;
 	}
-	if (pjs.mouseControl.isInObject(tomahawk) && tomahawkH == false) {
+	if (mouse.isInObject(tomahawk) && tomahawkH == false) {
 		tomahawk.setAlpha(0.7)
+		craftinfo.setAlpha(0.9);
+		craftinfo.reStyle({
+			text : 'Craft: 10 logs, 8 stones'
+		});
 	} 
 	else if (tomahawkH) {
+		craftinfo.reStyle({
+			text : '-'
+		});
 		tomahawk.setAlpha(0.9)
 	} else {
 		tomahawk.setAlpha(0.2);
 	}
-	if (pjs.mouseControl.isInObject(armor) && armorH == false) {
+	if (mouse.isInObject(armor) && armorH == false) {
 		armor.setAlpha(0.7);
+		craftinfo.reStyle({
+			text : 'Craft: 5 logs, 15 stones, 40 coins'
+		});
 	} else if (armorH) {
 		armor.setAlpha(0.9);
+		craftinfo.reStyle({
+			text : '-'
+		});
 	} else {
 		armor.setAlpha(0.2);
 	}
-	if (pjs.mouseControl.isInObject(bo) && boH == false) {
+	if (mouse.isInObject(bo) && boH == false) {
+		craftinfo.reStyle({
+			text : 'Craft: 10 logs, 2 stones'
+		});
 		bo.setAlpha(0.7);
 	} else if (boH) {
 		bo.setAlpha(0.9);
+		craftinfo.reStyle({
+			text : '-'
+		});
 	} else {
 		bo.setAlpha(0.2);
 	};
-	if (pjs.mouseControl.isInObject(robe) && robeH == false) {
+	if (mouse.isInObject(robe) && robeH == false) {
+		craftinfo.reStyle({
+			text : 'Craft: 4 logs, 50 coins'
+		});
 		robe.setAlpha(0.7);
 	} else if (robeH) {
+		craftinfo.reStyle({
+			text : '-'
+		});
 		robe.setAlpha(0.9);
 	} else {
 		robe.setAlpha(0.2);
 	};
-	if (pjs.mouseControl.isInObject(shield) && shieldH == false) {
+	if (mouse.isInObject(shield) && shieldH == false) {
+		craftinfo.reStyle({
+			text : 'Craft: 15 logs, 20 stones'
+		});
 		shield.setAlpha(0.7);
 	} else if (shieldH) {
+		craftinfo.reStyle({
+			text : '-'
+		});
 		shield.setAlpha(0.9);
 	} else {
 		shield.setAlpha(0.2);
@@ -916,6 +1072,15 @@ game.newLoop('game', function () {
 		fireH = true;
 
 	};
+	player.setShadow({
+		shadowColor : 'black',
+		shadowBlur : 5,
+		shadowX : 1, shadowY : 1
+	});
+	fire.setBox({
+   		offset : point(-50, -50), 
+   		size : pjs.vector.size(100, 100) 
+ 	});
 
 	if (player.isIntersect(fire)) {
 		if (health < 100) {
@@ -925,7 +1090,7 @@ game.newLoop('game', function () {
 		};
 
 		if (temperature < 30) {
-			temperature = 30;
+			temperature += 1;
 		};
  	};
  	if (temperature > -15) {
@@ -945,8 +1110,10 @@ game.newLoop('game', function () {
 
  	if (mouse.isPeekObject('LEFT', settings)) {
  		game.setLoop('menu')
- 	}30
-	
+ 	}
+
+ 	
+
 });
 
 
@@ -1023,20 +1190,127 @@ game.newLoop('menu', function () {
 
 });
 
-game.newLoop('inventory', function () {
-	game.fill('brown');
-	let fonmenu = game.newImageObject({
-		x : 0, y : 0,
-		w : width, h : height,
-		file : 'img/bgmenu.jpg'
-	})
-	fonmenu.draw()
+game.newLoop('gameover', function () {
+	game.fill('black');
+
 
 	pjs.brush.drawTextS({
-		x : 20, y : 20,
-		size : 25, text : 'Inventory',
-		color : 'black'
+		x : width / 3 + 20, y : 180,
+		size : 45, text : 'You died!',
+		color : 'red'
+	});
+
+	let restart = game.newTextObject({
+		x : width / 2 - 50, y : 300,
+		size : 30, text : 'Restart',
+		color : 'white', strokeColor : 'black'
+	});
+	restart.draw();
+	if (mouse.isPeekObject('LEFT', restart)) {
+		location.reload()
+	}
+});
+game.newLoop('skills', function () {
+	game.fill('black');
+
+	let exitskills = game.newTextObject({
+		x : width - 80, y : 10,
+		size : 30, color : 'white',
+		text : 'Exit'
+	});
+	exitskills.draw();
+	if (mouse.isPeekObject('LEFT', exitskills)) {
+		game.setLoop('game')
+	}
+
+	pjs.brush.drawImage({
+		x : 190, y : 120,
+		w : 70, h : 50,
+		file : 'img/arrow.png'
 	})
+
+	pjs.brush.drawText({
+		x : 20, y : 10,
+		text : 'Skills', size : 30,
+		color : 'white'
+	});
+
+	skillrunning1.setPosition(point(60, 100));
+	skillrunning1.draw();
+	let text1 = game.newTextObject({
+		x : 10, y : 200,
+		size : 20, color : 'white',
+		text : 'Running: +0.5 speed'
+	});
+	text1.draw()
+
+	skillrunning2.setPosition(point(290, 100));
+	skillrunning2.draw();
+	let text2 = game.newTextObject({
+		x : 240, y : 200,
+		size : 20, color : 'white',
+		text : 'Running: +1 speed'
+	});
+	text2.draw();
+
+	if (mouse.isInObject(skillrunning1) && runS1 === false) {
+		skillrunning1.setAlpha(0.8);
+		pjs.brush.drawText({
+			x : 62, y : 80,
+			size : 15, color : 'white',
+			text : 'Cost: 80XP'
+		});
+	} else if (runS1) {
+		skillrunning1.setAlpha(1);
+	} else {
+		skillrunning1.setAlpha(0.5);
+	};
+	if (mouse.isInObject(skillrunning2) && runS1 && runS2 === false) {
+		skillrunning2.setAlpha(0.8);
+		pjs.brush.drawText({
+			x : 292, y : 80,
+			size : 15, color : 'white',
+			text : 'Cost: 100XP'
+		});
+	} else if (runS2) {
+		skillrunning2.setAlpha(1);
+	} else {
+		skillrunning2.setAlpha(0.5);
+	};
+	if (xp >= 80 && runS1 === false) {
+		if (mouse.isPeekObject('LEFT', skillrunning1)) {
+			xp -= 80;
+			runS1 = true;
+			progressxp.w -= 80;
+		};
+	};
+
+	if (runS1) {
+		speedplayer = 3;
+	}
+
+	if (xp >= 100 && runS2 === false) {
+		if (mouse.isPeekObject('LEFT', skillrunning2)) {
+			xp -= 100;
+			runS2 = true;
+			progressxp.w -= 100;
+		};
+	};
+
+	if (runS2) {
+		speedplayer = 4;
+	};
+
+
+});
+game.newLoop('tutorial', function () {
+	game.fill('black');
+
+	pjs.brush.drawText({
+		x : 40, y : 20,
+		text : ''
+	})
+	
 });
 
 
