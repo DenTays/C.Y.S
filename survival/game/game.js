@@ -306,6 +306,12 @@ let skillrunning2 = game.newImageObject({
 	file : 'img/run2.png',
 	alpha : 0.5
 });
+let skillgear1 = game.newImageObject({
+	x : 10, y : height-90,
+	w : 90, h : 90,
+	file : 'img/gear.png',
+	alpha : 0.5
+});
 let fire = game.newImageObject({
 	x : -8000, y : 10,
 	w : 80, h : 80,
@@ -374,6 +380,7 @@ let fireH = false;
 let teleportH = false;
 let runS1 = false;
 let runS2 = false;
+let gearS1 = false;
 
 let enemyVision1 = false,
 	enemyVision2 = false,
@@ -495,7 +502,7 @@ game.newLoop('game', function () {
 	};
 
 	game.clear();
-	camera.moveTimeC(player, 10);
+	camera.moveTimeC(player, 0);
 
 
 
@@ -1109,7 +1116,7 @@ game.newLoop('game', function () {
  	tempround = 1 * Math.round(temperature);
 
  	if (mouse.isPeekObject('LEFT', settings)) {
- 		game.setLoop('menu')
+ 		game.setLoop('pause')
  	}
 
  	
@@ -1227,7 +1234,7 @@ game.newLoop('skills', function () {
 		x : 190, y : 120,
 		w : 70, h : 50,
 		file : 'img/arrow.png'
-	})
+	});
 
 	pjs.brush.drawText({
 		x : 20, y : 10,
@@ -1253,6 +1260,15 @@ game.newLoop('skills', function () {
 	});
 	text2.draw();
 
+	skillgear1.setPosition(point(60, 260));
+	skillgear1.draw();
+	let text3 = game.newTextObject({
+		x : 55, y : 360,
+		size : 20, color : 'white',
+		text : 'New gear'
+	});
+	text3.draw();
+
 	if (mouse.isInObject(skillrunning1) && runS1 === false) {
 		skillrunning1.setAlpha(0.8);
 		pjs.brush.drawText({
@@ -1276,6 +1292,18 @@ game.newLoop('skills', function () {
 		skillrunning2.setAlpha(1);
 	} else {
 		skillrunning2.setAlpha(0.5);
+	};
+	if (mouse.isInObject(skillgear1) && gearS1 === false) {
+		skillgear1.setAlpha(0.8);
+		pjs.brush.drawText({
+			x : 62, y : 240,
+			size : 15, color : 'white',
+			text : 'Cost: 100XP'
+		});
+	} else if (gearS1) {
+		skillgear1.setAlpha(1);
+	} else {
+		skillgear1.setAlpha(0.5);
 	};
 	if (xp >= 80 && runS1 === false) {
 		if (mouse.isPeekObject('LEFT', skillrunning1)) {
@@ -1303,14 +1331,34 @@ game.newLoop('skills', function () {
 
 
 });
-game.newLoop('tutorial', function () {
-	game.fill('black');
-
-	pjs.brush.drawText({
-		x : 40, y : 20,
-		text : ''
-	})
+game.newLoop('pause', function () {
 	
+	pjs.brush.drawTextS({
+		x : 285, y : 100,
+		text : 'PAUSE', size : 40,
+		color : 'black', strokeColor : 'white', strokeWidth : 1
+	});
+	let exittomenu = game.newTextObject({
+		x : width / 2 - 50, y : height / 3 + 70,
+		size : 30, text : 'MENU',
+		color : 'white',
+		strokeColorText : 'black', strokeWidthText : 1
+	});
+	exittomenu.draw();
+	let cont = game.newTextObject({
+		x : width / 2 - 82, y : height / 3,
+		size : 30, text : 'CONTINUE',
+		color : 'white',
+		strokeColorText : 'black', strokeWidthText : 1
+	});
+	cont.draw();
+
+	if (mouse.isPeekObject('LEFT', exittomenu)) {
+		game.startLoop('menu');
+	};
+	if (mouse.isPeekObject('LEFT', cont)) {
+		game.startLoop('game')
+	};
 });
 
 
