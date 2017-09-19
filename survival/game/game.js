@@ -73,7 +73,20 @@ let settings = game.newImageObject({
 	x : 150, y : 150,
 	w : 80, h : 80,
 	file : 'img/house.png',
-	alpha : 0.8
+	alpha : 0.6
+});
+
+let skillsenter = game.newImageObject({
+	x : 150, y : 150,
+	w : 80, h : 80,
+	file : 'img/book.png',
+	alpha : 0.6
+});
+let backpack = game.newImageObject({
+	x : 150, y : 150,
+	w : 80, h : 80,
+	file : 'img/bag.png',
+	alpha : 0.6
 });
 
 let boat = game.newImageObject({
@@ -704,6 +717,7 @@ game.newLoop('game', function () {
 	settings.setPositionS(point(width-90, 5));
 	settings.draw();
 
+
 	heart.setPositionS(point(160, 25))
 	heart.draw()
 	if (player.isIntersect(crate)) {
@@ -861,42 +875,17 @@ game.newLoop('game', function () {
 	}
 
 
-	let skillsenter = game.newTextObject({
-		x : width - 200, y : 72,
-		size : 25, color : 'white',
-		text : 'Skills'
-	});
-	pjs.brush.drawRectS({
-		x : width - 85, y : 104,
-		w : 70, h : 29,
-		fillColor : 'black', strokeColor : 'white',
-		strokeWidth : 2
-	})
-	skillsenter.setPositionS(point(width - 83, 110))
+	skillsenter.setPositionS(point(width-90, 90));
 	skillsenter.draw();
 	if (mouse.isPeekObject('LEFT', skillsenter)) {
 		game.setLoop('skills');
 	}
-	
-	let inventoryenter = game.newTextObject({
-		x : width - 200, y : 72,
-		size : 25, color : 'white',
-		text : 'Backpack'
-	});
-	pjs.brush.drawRectS({
-		x : width - 140, y : 164,
-		w : 125, h : 29,
-		fillColor : 'black', strokeColor : 'white',
-		strokeWidth : 2
-	})
-	inventoryenter.setPositionS(point(width - 138, 170))
-	inventoryenter.draw();
-	if (mouse.isPeekObject('LEFT', inventoryenter)) {
-		game.setLoop('inventory')
+
+	backpack.setPositionS(point(width-90, 170));
+	backpack.draw();
+	if (mouse.isPeekObject('LEFT', backpack)) {
+		game.setLoop('inventory');
 	}
-
-	
-
 	
 	if (mouse.isPress('RIGHT') && stickCount >= 10 && fireH == false) {
 		stickCount -= 10;
@@ -1516,4 +1505,4 @@ game.newLoop('inventory', function () {
 	}
 })
 
-game.startLoop('game');
+game.startLoop('menu');
