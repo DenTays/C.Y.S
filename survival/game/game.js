@@ -88,6 +88,12 @@ let backpack = game.newImageObject({
 	file : 'img/bag.png',
 	alpha : 0.6
 });
+let chest2 = game.newImageObject({
+	x : 150, y : 150,
+	w : 80, h : 80,
+	file : 'img/chest2.png',
+	alpha : 0.6
+});
 
 let boat = game.newImageObject({
 	x : -60, y : 10,
@@ -321,6 +327,11 @@ let pickaxe = game.newImageObject({
 	file : 'img/pickaxe.png',
 	alpha : 0.2
 });
+let chest = game.newImageObject({
+	x : 10, y : height-90,
+	w : 110, h : 110,
+	file : 'img/chest.png'
+});
 let teleport = game.newImageObject({
 	x : 10, y : height-90,
 	w : 70, h : 70,
@@ -383,6 +394,13 @@ let rectxp = game.newRectObject({
 	fillColor : 'white',
 	strokeWidth : 2,
 	strokeColor : 'black'
+});
+let progressLoading = game.newRectObject({
+	x : 20, y : 300, 
+	w : 0, h : 70,
+	fillColor : 'white',
+	strokeWidth : 3,
+	strokeColor : 'grey'
 });
 
 
@@ -595,13 +613,6 @@ game.newLoop('game', function () {
 		if (meatCount < 80) {
 			meatCount += math.random(1, 3);
 		};
-		if (health >= 80) {
-			health = 100;
-			progressHealth.w = 100;
-		} else if (health < 80) {
-			health += 20;
-			progressHealth.w += 20;
-		}
 		if (xp < 200) {
 			xp += 2;
 			progressxp.w += 2
@@ -620,13 +631,6 @@ game.newLoop('game', function () {
 		if (meatCount < 80) {
 			meatCount += math.random(1, 3);
 		};
-		if (health >= 80) {
-			health = 100;
-			progressHealth.w = 100;
-		} else if (health < 80) {
-			health += 20;
-			progressHealth.w += 20;
-		}
 		if (xp < 200) {
 			xp += 2;
 			progressxp.w += 2
@@ -886,6 +890,15 @@ game.newLoop('game', function () {
 	if (mouse.isPeekObject('LEFT', backpack)) {
 		game.setLoop('inventory');
 	}
+
+	if (ubiystva >= 5 && isBuyed == false) {
+		chest2.setPositionS(point(width-90, 260));
+		chest2.draw();
+		if (mouse.isPeekObject('LEFT', chest2)) {
+			game.setLoop('awards');
+			isBuyed = true
+		};
+	}
 	
 	if (mouse.isPress('RIGHT') && stickCount >= 10 && fireH == false) {
 		stickCount -= 10;
@@ -936,12 +949,28 @@ game.newLoop('game', function () {
  	
 
 });
+let load1 = false;
+game.newLoop('progressLoad', function () {
+	game.fill('#1E1E1E');
 
+	pjs.brush.drawRect({
+		x : 20, y : 300,
+		w : 660, h : 70,
+		fillColor : '#1E1E1E',
+		strokeWidth : 3,
+		strokeColor : 'grey'
+	})
+	progressLoading.draw();
+	progressLoading.w += 5;
+	if (progressLoading.w >= 660) {
+		game.setLoop('menu');
+	}
 
+})
 game.newLoop('menu', function () {
-	game.fill('black');
+	game.fill('#1E1E1E');
 	
-	
+
 	pjs.brush.drawRect({
 		x : width / 2 - 70, y : height / 2 - 50,
 		w : 143, h : 40,
@@ -968,13 +997,6 @@ game.newLoop('menu', function () {
 		size : 30, 
 		color : 'white'
 	});
-	let award = game.newRectObject({
-		x : 299, y : 30,
-		w : 193, h : 30,
-		fillColor : 'gold',
-		strokeColor : 'orange',
-		strokeWidth : 3
-	})
 	start.draw();
 	vk.draw()
 
@@ -985,29 +1007,7 @@ game.newLoop('menu', function () {
 		document.location.reload()
 	};
 	
-	if (ubiystva >= 3) {
-		trophy.setPositionS(point(20, 10));
-		trophy.draw();
-		pjs.brush.drawTextS({
-			text : 'Killed 3 enemies!',
-			size : 20, color : 'gold',
-			x : 100, y : 38
-		});
-		if (mouse.isPeekObject('LEFT', award)) {
-			coinCount += 50;
-			isBuyed = true;
-		}
-		if (isBuyed == false) {
-		award.draw();
-		pjs.brush.drawTextS({
-			text : 'Claim award!',
-			size : 28, color : 'black',
-			x : 304, y : 35
-		});
-		
-		};
-
-	};
+	
 
 });
 
@@ -1137,19 +1137,19 @@ game.newLoop('skills', function () {
 game.newLoop('pause', function () {
 	
 	pjs.brush.drawTextS({
-		x : 285, y : 100,
+		x : 293, y : 100,
 		text : 'PAUSE', size : 40,
 		color : 'black', strokeColor : 'white', strokeWidth : 1
 	});
 	let exittomenu = game.newTextObject({
-		x : width / 2 - 50, y : height / 3 + 70,
+		x : width / 2 - 40, y : height / 3 + 70,
 		size : 30, text : 'MENU',
 		color : 'white',
 		strokeColorText : 'black', strokeWidthText : 1
 	});
 	exittomenu.draw();
 	let cont = game.newTextObject({
-		x : width / 2 - 82, y : height / 3,
+		x : width / 2 - 72, y : height / 3,
 		size : 30, text : 'CONTINUE',
 		color : 'white',
 		strokeColorText : 'black', strokeWidthText : 1
@@ -1256,6 +1256,32 @@ game.newLoop('inventory', function () {
 
 	pickaxe.setPosition(point(480, 400));
 	pickaxe.draw();
+
+	if (mouse.isInObject(shield) && shieldH == false) {
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 15 wood, 20 stones :  + 0.5 armor',
+			size : 15, color : 'white'
+		});
+		shield.setAlpha(0.7);
+	} else if (shieldH) {
+		shield.setAlpha(0.9);
+	} else {
+		shield.setAlpha(0.2);
+	};
+
+	if (mouse.isInObject(pickaxe) && pickH == false) {
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 8 wood, 15 stones, 5 coins :  + 1 damage',
+			size : 15, color : 'white'
+		});
+		pickaxe.setAlpha(0.7);
+	} else if (pickH) {
+		pickaxe.setAlpha(0.9);
+	} else {
+		pickaxe.setAlpha(0.2);
+	};
 	}
 
 	pjs.brush.drawText({
@@ -1337,51 +1363,7 @@ game.newLoop('inventory', function () {
 		uron3 = 1;
 	}
 
-	if (mouse.isInObject(log)) {
-		log.setAlpha(0.7)
-		craftinfo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : 'Wood'
-		});
-	} else {
-		log.setAlpha(1)
-	};
-	if (mouse.isInObject(stone)) {
-		stone.setAlpha(0.7)
-		craftinfo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : 'Stone'
-		});
-	} else {
-		stone.setAlpha(1)
-	};
-	if (mouse.isInObject(coinBB)) {
-		coinBB.setAlpha(0.7)
-		craftinfo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : 'Coin'
-		});
-	} else {
-		coinBB.setAlpha(1)
-	};
-	if (mouse.isInObject(meat)) {
-		meat.setAlpha(0.7)
-		craftinfo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : 'Meat :  + 20 health'
-		});
-	} else {
-		meat.setAlpha(1)
-	};
-	if (mouse.isInObject(mr)) {
-		mr.setAlpha(0.7)
-		craftinfo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : 'Mushroom :  + 4 health'
-		});
-	} else {
-		mr.setAlpha(1)
-	};
+	
 	if (mouse.isPeekObject('LEFT', meat) && meatCount > 0) {
 		if (health <= 79) {
 			health += 20;
@@ -1408,91 +1390,107 @@ game.newLoop('inventory', function () {
 	};	
 	if (mouse.isInObject(tomahawk) && tomahawkH == false) {
 		tomahawk.setAlpha(0.7)
-		craftinfo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : 'Craft: 10 logs, 8 stones :  + 1 damage'
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 10 wood, 8 stones :  + 1 damage',
+			size : 15, color : 'white'
 		});
 	} 
 	else if (tomahawkH) {
-		craftinfo.reStyle({
-			text : '-'
-		});
 		tomahawk.setAlpha(0.9)
 	} else {
 		tomahawk.setAlpha(0.2);
 	}
 	if (mouse.isInObject(armor) && armorH == false) {
 		armor.setAlpha(0.7);
-		craftinfo.reStyle({
-			text : 'Craft: 5 logs, 15 stones, 40 coins :  + 0.5 armor'
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 5 wood, 15 stones, 40 coins :  + 0.5 armor',
+			size : 15, color : 'white'
 		});
 	} else if (armorH) {
 		armor.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : '-'
-		});
 	} else {
 		armor.setAlpha(0.2);
 	}
 	if (mouse.isInObject(bo) && boH == false) {
-		craftinfo.reStyle({
-			text : 'Craft: 10 logs, 2 stones :  + 0.5 damage'
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 10 wood, 2 stones :  + 0.5 damage',
+			size : 15, color : 'white'
 		});
 		bo.setAlpha(0.7);
 	} else if (boH) {
 		bo.setAlpha(0.9);
-		craftinfo.reStyle({
-			text : '-'
-		});
 	} else {
 		bo.setAlpha(0.2);
 	};
 	if (mouse.isInObject(robe) && robeH == false) {
-		craftinfo.reStyle({
-			text : 'Craft: 4 logs, 50 coins:  + warm'
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 4 wood, 50 coins:  + warm',
+			size : 15, color : 'white'
 		});
 		robe.setAlpha(0.7);
 	} else if (robeH) {
-		craftinfo.reStyle({
-			text : '-'
-		});
 		robe.setAlpha(0.9);
 	} else {
 		robe.setAlpha(0.2);
 	};
-	if (mouse.isInObject(shield) && shieldH == false) {
-		craftinfo.reStyle({
-			text : 'Craft: 15 logs, 20 stones :  + 0.5 armor'
-		});
-		shield.setAlpha(0.7);
-	} else if (shieldH) {
-		craftinfo.reStyle({
-			text : '-'
-		});
-		shield.setAlpha(0.9);
-	} else {
-		shield.setAlpha(0.2);
-	};
 
-	if (mouse.isInObject(pickaxe) && pickH == false) {
-		craftinfo.reStyle({
-			text : 'Craft: 8 logs, 15 stones, 5 coins :  + 1 damage'
+	if (mouse.isInObject(log)) {
+		log.setAlpha(0.7)
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Wood',
+			size : 15, color : 'white'
 		});
-		pickaxe.setAlpha(0.7);
-	} else if (pickH) {
-		craftinfo.reStyle({
-			text : '-'
-		});
-		pickaxe.setAlpha(0.9);
 	} else {
-		pickaxe.setAlpha(0.2);
+		log.setAlpha(1)
 	};
+	if (mouse.isInObject(stone)) {
+		stone.setAlpha(0.7)
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Stone',
+			size : 15, color : 'white'
+		});
+	} else {
+		stone.setAlpha(1)
+	};
+	if (mouse.isInObject(coinBB)) {
+		coinBB.setAlpha(0.7)
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Coin',
+			size : 15, color : 'white'
+		});
+	} else {
+		coinBB.setAlpha(1)
+	};
+	if (mouse.isInObject(meat)) {
+		meat.setAlpha(0.7)
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Meat :  + 20 health',
+			size : 15, color : 'white'
+		});
+	} else {
+		meat.setAlpha(1)
+	};
+	if (mouse.isInObject(mr)) {
+		mr.setAlpha(0.7)
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Mushroom :  + 4 health',
+			size : 15, color : 'white'
+		});
+	} else {
+		mr.setAlpha(1)
+	};
+	
 
 	// crafting END
-
-	craftinfo.color = 'white';
-	craftinfo.setPositionS(point(20, height - 100));
-	craftinfo.draw();
 
 	let exittogame = game.newTextObject({
 		x : width - 120, y : 20,
@@ -1503,6 +1501,76 @@ game.newLoop('inventory', function () {
 	if (mouse.isPeekObject('LEFT', exittogame)) {
 		game.startLoop('game')
 	}
+});
+let mow = false;
+let bb, gg, dd;
+game.newLoop('awards', function () {
+	game.fill('#1E1E1E');
+
+	let key = game.newTextObject({
+		x : width / 2 - chest.w / 3 + 3, y : 80,
+		size : 25,
+		color : 'white',
+		text : 'OPEN'
+	});
+
+	let exitfromawards = game.newTextObject({
+		x : width - 90, y : 20,
+		size : 25,
+		color : 'white',
+		text : 'EXIT'
+	});
+	pjs.brush.drawRect({
+		x : width / 2 - chest.w / 2 + 2, y : 130,
+		w : 110, h : 90,
+		fillColor : 'rgba(0, 0, 0, 0)',
+		strokeColor : 'white', strokeWidth : 3
+	});
+	if (mow == true) {
+		chest.setAlpha(0.6);
+		key.setAlpha(0.6);
+		pjs.brush.drawImageS({
+			x : width / 2 - chest.w / 2, y : 125,
+			w : 110, h : 110, 
+			file : 'img/cross.png',
+			alpha : 1
+		})
+	}
+	
+	key.draw();
+	chest.setPosition(point(width / 2 - chest.w / 2, 120))
+	chest.draw();
+	exitfromawards.draw();
+	if (mouse.isPeekObject('LEFT', exitfromawards) && mow == true) {
+		game.startLoop('game');
+	}
+	if (mow == false) {
+		pjs.brush.drawText({
+			x : width / 2 - 150, y : 300,
+			size : 20, text : 'Can contain: Wood, stone, meat',
+			color : 'white'
+		});
+	}
+	
+	
+	
+	if (mouse.isPeekObject('LEFT', key) && mow == false) {
+		bb = math.random(0, 25);
+		stickCount += bb;
+		gg = math.random(0, 20);
+		rockCount += gg;
+		dd = math.random(0, 8);
+		meatCount += dd;
+		mow = true;
+
+	};
+	if (mow == true) {
+		pjs.brush.drawText({
+			x : width / 2 - 135, y : 300,
+			size : 20, text : 'Wood: '+bb+' Stone: '+gg+' Meat: '+dd,
+			color : 'white'
+		});
+	}
 })
 
-game.startLoop('menu');
+game.startLoop('progressLoad');
