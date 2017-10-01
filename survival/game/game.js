@@ -14,6 +14,8 @@ let system = pjs.system;
 
 pjs.mouseControl.setCursorImage("img/cursor1.png");
 
+pjs.system.initFPSCheck();
+
 let color = ['red', 'yellow', 'blue', 'black', 'orange'];
 let index = pjs.math.random(0, color.length-1);
 
@@ -456,6 +458,8 @@ let isBuyed = false;
 let speedplayer = 2.5;
 let ps = point()
 
+let fps = pjs.system.getFPS();
+
 
 player.keyMove = function (){
 		if (key.isDown('W')) {
@@ -508,7 +512,7 @@ game.newLoop('game', function () {
 	game.clear();
 	camera.moveTimeC(player, 0);
 
-
+	
 
 	if (player.isDynamicIntersect((rect.getDynamicBox()))) {
 		health-=dmg;
@@ -571,8 +575,8 @@ game.newLoop('game', function () {
 		if (coinCount<=500)
 		coinCount+=15;
 		if (xp < 200) {
-			xp += 3;
-			progressxp.w += 3
+			xp += 8;
+			progressxp.w += 8
 		}
 	}
 	if (healthe2 <= 0) {
@@ -584,8 +588,8 @@ game.newLoop('game', function () {
 		if (coinCount<=500)
 		coinCount+=15;
 		if (xp < 200) {
-			xp += 3;
-			progressxp.w += 3
+			xp += 8;
+			progressxp.w += 8
 		}
 	}
 	if (healthe3 <= 0) {
@@ -597,8 +601,8 @@ game.newLoop('game', function () {
 		if (coinCount<=500)
 		coinCount+=15;
 		if (xp < 200) {
-			xp += 3;
-			progressxp.w += 3
+			xp += 8;
+			progressxp.w += 8
 		}
 	}
 
@@ -614,8 +618,8 @@ game.newLoop('game', function () {
 			meatCount += math.random(1, 3);
 		};
 		if (xp < 200) {
-			xp += 2;
-			progressxp.w += 2
+			xp += 3;
+			progressxp.w += 3
 		}
 		
 	}
@@ -632,8 +636,8 @@ game.newLoop('game', function () {
 			meatCount += math.random(1, 3);
 		};
 		if (xp < 200) {
-			xp += 2;
-			progressxp.w += 2
+			xp += 3;
+			progressxp.w += 3
 		}
 	}
 
@@ -945,7 +949,12 @@ game.newLoop('game', function () {
  	if (mouse.isPeekObject('LEFT', settings)) {
  		game.setLoop('pause')
  	}
-
+ 	pjs.brush.drawTextS({
+		x : 10, y : height - 30,
+		text : 'FPS: '+pjs.system.getFPS(),
+		color : 'black',
+		size : 15
+	})
  	
 
 });
@@ -1013,12 +1022,12 @@ game.newLoop('menu', function () {
 
 
 game.newLoop('skills', function () {
-	game.fill('black');
+	game.fill('#1E1E1E');
 
 	let exitskills = game.newTextObject({
-		x : width - 80, y : 10,
+		x : width - 120, y : 20,
 		size : 30, color : 'white',
-		text : 'Exit'
+		text : 'EXIT'
 	});
 	exitskills.draw();
 	if (mouse.isPeekObject('LEFT', exitskills)) {
@@ -1032,8 +1041,8 @@ game.newLoop('skills', function () {
 	});
 
 	pjs.brush.drawText({
-		x : 20, y : 10,
-		text : 'Skills', size : 30,
+		x : 30, y : 20,
+		text : 'SKILLS', size : 30,
 		color : 'white'
 	});
 
@@ -1051,7 +1060,7 @@ game.newLoop('skills', function () {
 	let text2 = game.newTextObject({
 		x : 240, y : 200,
 		size : 20, color : 'white',
-		text : 'Running: +1 speed'
+		text : 'Running: +0.5 speed'
 	});
 	text2.draw();
 
@@ -1121,7 +1130,7 @@ game.newLoop('skills', function () {
 	};
 
 	if (runS2) {
-		speedplayer = 4;
+		speedplayer = 3.5;
 	};
 
 	if (xp >= 40 && gearS1 === false) {
@@ -1572,5 +1581,34 @@ game.newLoop('awards', function () {
 		});
 	}
 })
+let isHere1 = true;
+game.newLoop('islands', function () {
+	game.fill('#1E1E1E');
 
-game.startLoop('progressLoad');
+	let go1 = game.newTextObject({
+		x : 140, y : 350,
+		size : 25, text : 'Go here',
+		color : 'white'
+	})
+	pjs.brush.drawImage({
+		x : 130, y : 200,
+		scale : 1.5,
+		file : 'img/island1.png'
+	});
+	pjs.brush.drawRect({
+		x : 130, y : 200,
+		w : 120, h : 120,
+		strokeColor : 'white',
+		strokeWidth : 4,
+		fillColor : 'rgba(0, 0, 0, 0)',
+		alpha : 0.6
+	});
+	go1.draw()
+	if (isHere1 == true) {
+		if (mouse.isPeekObject('LEFT', go1)) {
+			game.setLoop('hardcore');
+		}
+	}
+})
+
+game.startLoop('menu');
