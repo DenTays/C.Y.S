@@ -1950,4 +1950,4 @@ game.newLoop('islands', function () {
 	}
 })
 
-game.startLoop('game');
+game.startLoop('menu');
