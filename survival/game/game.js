@@ -38,7 +38,7 @@ let fon = game.newImageObject({
 
 let message = game.newTextObject({
 	x : 0, y : 0,
-	size : 25,
+	size : 20,
 	color : 'black'
 }) ;
 
@@ -134,6 +134,12 @@ let mr = game.newImageObject({
 	file : 'img/musheat.png'
 });
 
+let hide = game.newImageObject({
+	x : 20, y : 40,
+	w : 70, h : 70,
+	file : 'img/hide.png'
+});
+
 let heart = game.newImageObject({
 	x : 20, y : 40,
 	w : 60, h : 60,
@@ -157,31 +163,36 @@ let progress = pjs.resources.getProgress();
 
 //enemies
 let rect = game.newImageObject({
-	x : math.random(0, max), y : math.random(0, max),
+	x : math.random(250, max), y : math.random(250, max),
 	w : 80, h : 80,
 	file : 'img/behold.png'
 });
 let rect2 = game.newImageObject({
-	x : math.random(0, max), y : math.random(0, max),
+	x : math.random(250, max), y : math.random(250, max),
 	w : 80, h : 80,
 	file : 'img/behold.png'
 });
 let rect3 = game.newImageObject({
-	x : math.random(0, max), y : math.random(0, max),
+	x : math.random(250, max), y : math.random(250, max),
 	w : 80, h : 80,
 	file : 'img/behold.png'
 })
 
 
 let pig = game.newImageObject({
-	x : math.random(0, max), y : math.random(0, max),
-	w : 70, h : 70,
-	file : 'img/pig.png'
+	x : 150, y : 150,
+	w : 80, h : 80,
+	file : 'img/pig2.png'
 });
 let pig2 = game.newImageObject({
 	x : math.random(0, max), y : math.random(0, max),
-	w : 70, h : 70,
-	file : 'img/pig.png'
+	w : 80, h : 80,
+	file : 'img/pig2.png'
+});
+let pig3 = game.newImageObject({
+	x : math.random(0, max), y : math.random(0, max),
+	w : 80, h : 80,
+	file : 'img/pig2.png'
 });
 
 let distp = game.newRectObject({
@@ -191,6 +202,12 @@ let distp = game.newRectObject({
 	alpha : 0
 });
 let distp2 = game.newRectObject({
+	x : 0, y : 0,
+	w : 500, h : 500,
+	fillColor : 'black',
+	alpha : 0
+});
+let distp3 = game.newRectObject({
 	x : 0, y : 0,
 	w : 500, h : 500,
 	fillColor : 'black',
@@ -248,7 +265,7 @@ let coins = []
 OOP.fillArr(coins, 60, function () {
 	return game.newCircleObject({
 		position : point(math.random(30, max - 150), math.random(30, max - 150)),
-		radius : 15,
+		radius : 10,
 		fillColor : 'gold',
 		strokeWidth : 2, strokeColor : 'black'
 	})
@@ -334,10 +351,10 @@ let chest = game.newImageObject({
 	w : 110, h : 110,
 	file : 'img/chest.png'
 });
-let teleport = game.newImageObject({
+let boots = game.newImageObject({
 	x : 10, y : height-90,
 	w : 70, h : 70,
-	file : 'img/teleport.png',
+	file : 'img/boots.png',
 	alpha : 0.2
 });
 let skillrunning1 = game.newImageObject({
@@ -413,12 +430,14 @@ let stickCount = 0;
 let rockCount = 0;
 let meatCount = 0;
 let mrCount = 0;
+let hideCount = 0;
 let health = 100;
 let healthe1 = 80,
 		healthe2 = 80,
 		healthe3 = 80;
 let healthp1 = 50,
-	healthp2 = 50;
+	healthp2 = 50,
+	healthp3 = 50;
 
 let uron = 1;
 let uron2 = 0;
@@ -427,6 +446,7 @@ let uron3 = 0;
 let dmg = 1;
 let dmg2 = 0.5;
 
+let speedpig = 1;
 
 let armorH = false;
 let tomahawkH = false;
@@ -436,6 +456,7 @@ let shieldH = false;
 let fireH = false;
 let teleportH = false;
 let pickH = false;
+let bootsH = false;
 let runS1 = false;
 let runS2 = false;
 let gearS1 = false;
@@ -460,6 +481,11 @@ let ps = point()
 
 let fps = pjs.system.getFPS();
 
+let m1 = true;
+let m2 = true;
+let m3 = true;
+let m4 = true;
+let m5 = true;
 
 player.keyMove = function (){
 		if (key.isDown('W')) {
@@ -496,17 +522,18 @@ game.newLoop('game', function () {
 	})
 
 
+
 	if (player.x <= fon.x-10) {
 		player.x = -10;
 	};
 	if (player.y <= fon.y-10) {
 		player.y = -10;
 	};
-	if (player.y >= fon.h+10) {
-		player.y = max + 10;
+	if (player.y >= max) {
+		player.y = max;
 	};
-	if (player.x >= fon.w+10) {
-		player.x = max + 10;
+	if (player.x >= max) {
+		player.x = max;
 	};
 
 	game.clear();
@@ -523,7 +550,8 @@ game.newLoop('game', function () {
 		progressHealth.w -= dmg2;
 		message.reStyle({
 			text : 'Противник: '+ healthe1
-		})
+		});
+
 	}
 
 	if (player.isDynamicIntersect((rect2.getDynamicBox()))) {
@@ -563,6 +591,13 @@ game.newLoop('game', function () {
 		healthp2 -= uron2;
 		message.reStyle({
 			text : 'Противник: '+ healthp2
+		})
+	}
+	if (player.isDynamicIntersect((pig3.getDynamicBox()))) {
+		healthp3 -= uron;
+		healthp3 -= uron2;
+		message.reStyle({
+			text : 'Противник: '+ healthp3
 		})
 	}
 
@@ -617,6 +652,9 @@ game.newLoop('game', function () {
 		if (meatCount < 80) {
 			meatCount += math.random(1, 3);
 		};
+		if (hideCount < 50) {
+			hideCount += math.random(2, 4)
+		};
 		if (xp < 200) {
 			xp += 3;
 			progressxp.w += 3
@@ -635,6 +673,29 @@ game.newLoop('game', function () {
 		if (meatCount < 80) {
 			meatCount += math.random(1, 3);
 		};
+		if (hideCount < 50) {
+			hideCount += math.random(2, 4)
+		};
+		if (xp < 200) {
+			xp += 3;
+			progressxp.w += 3
+		}
+	}
+	if (healthp3 <= 0) {
+		pig3.x = math.random(0, max);
+		pig3.y = math.random(0, max);
+		healthp3 = 50;
+		ubiystva += 1;
+		console.log(ubiystva);
+		if (coinCount<=500) {
+			coinCount+=5;
+		};
+		if (meatCount < 80) {
+			meatCount += math.random(1, 3);
+		};
+		if (hideCount < 50) {
+			hideCount += math.random(2, 4)
+		};
 		if (xp < 200) {
 			xp += 3;
 			progressxp.w += 3
@@ -645,15 +706,15 @@ game.newLoop('game', function () {
 	if (player.isIntersect(distp)) {
 		if (player.x > distp.x && player.x < pig.x) {
 			pig.setFlip(false, false);
-				pig.x += 1;
+			pig.x += speedpig;
 		} else if (player.x > distp.x && player.x > pig.x) {
 			pig.setFlip(true, false);
-			pig.x -= 1;
+			pig.x -= speedpig;
 		};
 		if (player.y > distp.y && player.y < pig.y) {
-			pig.y += 1;
+			pig.y += speedpig;
 		} else if (player.y > distp.y && player.y > pig.y) {
-			pig.y -= 1;
+			pig.y -= speedpig;
 		};
 	};
 
@@ -661,15 +722,29 @@ game.newLoop('game', function () {
 	if (player.isIntersect(distp2)) {
 		if (player.x > distp2.x && player.x < pig2.x) {
 			pig2.setFlip(false, false);
-			pig2.x += 1;
+			pig2.x += speedpig;
 		} else if (player.x > distp2.x && player.x > pig2.x) {
 			pig2.setFlip(true, false);
-			pig2.x -= 1;
+			pig2.x -= speedpig;
 		};
 		if (player.y > distp2.y && player.y < pig2.y) {
-			pig2.y += 1;
+			pig2.y += speedpig;
 		} else if (player.y > distp2.y && player.y > pig2.y) {
-			pig2.y -= 1;
+			pig2.y -= speedpig;
+		};
+	};
+	if (player.isIntersect(distp3)) {
+		if (player.x > distp3.x && player.x < pig3.x) {
+			pig3.setFlip(false, false);
+			pig3.x += speedpig;
+		} else if (player.x > distp3.x && player.x > pig3.x) {
+			pig3.setFlip(true, false);
+			pig3.x -= speedpig;
+		};
+		if (player.y > distp3.y && player.y < pig3.y) {
+			pig3.y += speedpig;
+		} else if (player.y > distp3.y && player.y > pig3.y) {
+			pig3.y -= speedpig;
 		};
 	};
 	if (pig.x < -30 || pig.y < -30) {
@@ -678,12 +753,49 @@ game.newLoop('game', function () {
 	if (pig2.x < -30 || pig2.y < -30)  {
 		healthp2 = 0;
 	};
-	if (pig.x > max + 20 || pig.y > max + 20) {
+	if (pig3.x < -30 || pig3.y < -30)  {
+		healthp3 = 0;
+	};
+	if (pig.x > max || pig.y > max) {
 		healthp1 = 0;
 	}
-	if (pig2.x > max + 20 || pig2.y > max + 20)  {
+	if (pig2.x > max || pig2.y > max)  {
 		healthp2 = 0;
 	};
+	if (pig3.x > max || pig3.y > max)  {
+		healthp3 = 0;
+	};
+	if (message.alpha > 0) {
+	message.reStyle({
+		text : 'Hello, survivor!'
+	});
+	message.alpha -= 0.01
+	} else if (m1 === true && message.alpha <= 0.3) {
+		message.reStyle({
+		text : 'Bag is your inventory. Click on it.',
+		alpha : 1
+		})
+
+	} else if (m1 === false && m2 === true) {
+		message.reStyle({
+		text : 'In book you can upgrade your skills.'
+		})
+	} else if (m2 === false && m3 === true) {
+		message.reStyle({
+		text : 'Intersect enemies or pigs to fight.'
+		})
+		setTimeout(function() {m3 = false;}, 10000);
+	} else if (m1 === false && m2 === false && m3 === false && m4 === true) {
+		message.reStyle({
+		text : 'Click on right button of mouse to set fire.'
+		})
+		setTimeout(function() {m4 = false;}, 10000);
+	} else if (m1 === false && m2 === false && m3 === false && m4 === false && m5 === true) {
+		message.reStyle({
+		text : 'Good luck!'
+		})
+		setTimeout(function() {m5 = false;}, 10000);
+	}
 
 
 	player.keyMove();
@@ -705,6 +817,8 @@ game.newLoop('game', function () {
 	distp.draw();
 	distp2.setPosition(point(pig2.x-distp2.w/2+pig2.w/2, pig2.y-distp2.h/2+pig2.h/2));
 	distp2.draw();
+	distp3.setPosition(point(pig3.x-distp3.w/2+pig3.w/2, pig3.y-distp3.h/2+pig3.h/2));
+	distp3.draw();
 	OOP.drawArr(coins);
 	OOP.drawArr(mushroom);
 	OOP.drawArr(sticks);
@@ -714,6 +828,7 @@ game.newLoop('game', function () {
 	boat.draw();
 	pig.draw();
 	pig2.draw();
+	pig3.draw();
 	player.draw();
 	OOP.drawArr(bushes);
 	OOP.drawArr(trees);
@@ -976,6 +1091,174 @@ game.newLoop('progressLoad', function () {
 	}
 
 })
+
+
+/* ИДЁТ РАЗРАБОТКА!!! 
+ * * * * * * * * * * *
+    	\
+0000 >----|>
+    	/
+_ _ _ _ _ _ _ _ _ _ _ _
+
+*/
+/*let www = true;
+let dmgmin = dmg + dmg2; 
+
+let battleBehold1 = true;
+
+game.newLoop('battle', function () {
+	game.fill('#1E1E1E');
+
+	pjs.brush.drawRect({
+		x : 40, y : 80,
+		w : 225, h : 60,
+		fillColor : 'black',
+		strokeColor : 'white', strokeWidth : 2
+	});
+	pjs.brush.drawImageS({
+		x : 270, y : 80,
+		w : 62, h : 62,
+		file : 'img/att.png'
+	});
+	pjs.brush.drawRect({
+		x : 40, y : 160,
+		w : 225, h : 60,
+		fillColor : 'black',
+		strokeColor : 'white', strokeWidth : 2
+	});
+	pjs.brush.drawImageS({
+		x : 270, y : 160,
+		w : 62, h : 62,
+		file : 'img/sh.png',
+		alpha : 1
+	});
+	pjs.brush.drawRect({
+		x : 40, y : 240,
+		w : 225, h : 60,
+		fillColor : 'black',
+		strokeColor : 'white', strokeWidth : 2
+	});
+	pjs.brush.drawImageS({
+		x : 270, y : 240,
+		w : 62, h : 62,
+		file : 'img/ru.png',
+		alpha : 1
+	});
+	pjs.brush.drawImage({
+			x : 10, y :height - 120,
+			w : 60, h: 60,
+			file : 'img/hearts.png'
+	});
+	rectHealth.setPosition(point(90, height - 105))
+	rectHealth.draw();
+	progressHealth.setPosition(point(92, height - 103))
+	progressHealth.draw();	
+	let attack = game.newTextObject({
+		x : 65, y : 97,
+		size : 40, text : 'ATTACK',
+		color : 'white',
+		font : 'serif'
+	});
+	let heal = game.newTextObject({
+		x : 93, y : 178,
+		size : 40, text : 'HEAL',
+		color : 'white',
+		font : 'serif'
+	});
+	let run = game.newTextObject({
+		x : 65, y : 258,
+		size : 40, text : 'ESCAPE',
+		color : 'white',
+		font : 'serif'
+	});
+	heal.draw();
+	attack.draw();
+	run.draw();
+
+	if (health <= 0) {
+			document.location.reload();
+		}
+
+	if (battleBehold1) {
+		pjs.brush.drawTextS({
+			x : 455, y : 40,
+			size : 35, text : 'BEHOLD',
+			color : 'white'
+		});
+
+		pjs.brush.drawImage({
+			x : 390, y : 80,
+			w : 284, h : 284,
+			file : 'img/be.png'
+		});
+		pjs.brush.drawImage({
+			x : 390, y :380,
+			w : 60, h: 60,
+			file : 'img/h.png'
+		});
+		pjs.brush.drawText({
+			x : 460, y : 397,
+			size : 30,
+			color : 'white',
+			text : healthe1
+		});
+		pjs.brush.drawImage({
+			x : 540, y :380,
+			w : 60, h: 60,
+			file : 'img/att2.png'
+		});
+		pjs.brush.drawText({
+			x : 620, y : 397,
+			size : 30,
+			color : 'white',
+			text : dmg+dmg2
+		});
+		let a = math.random(uron + uron2 + uron3-1, uron + uron2 + uron3+1);
+		if (mouse.isPeekObject('LEFT', attack)) {
+			a = math.random(uron + uron2 + uron3-1, uron + uron2 + uron3+1);
+			www = true;
+			if (www === true) {
+				pjs.brush.drawText({
+					x : width - 170, y : height - 150,
+					size : 20, color : 'white',
+					text : 'You attacked behold. It want to eat your brain.'
+				});
+				setTimeout(function() {www = false;}, 2000);
+			};
+
+			healthe1 -= math.random(uron + uron2 + uron3-1, uron + uron2 + uron3+1);
+			health -= dmgmin;
+			progressHealth.w -= dmgmin;
+			console.log(health);
+			if (healthe1 <= 0) {
+				rect.x = math.random(0, max);
+				rect.y = math.random(0, max);
+				healthe1 = 90;
+				ubiystva += 1;
+				console.log(ubiystva);
+				if (coinCount<=500)
+				coinCount+=15;
+				if (xp < 200) {
+					xp += 8;
+					progressxp.w += 8
+				}
+				game.startLoop('game')
+			}
+		}
+		let z;
+		if (mouse.isPeekObject('LEFT', heal)) {
+			if (progressHealth.w < 100 && health < 100) {
+			z = math.random(-1, 5);
+			health += z;
+			progressHealth.w += z;
+			health -= dmgmin;
+			}
+		}
+	}
+});*/
+
+// КОНЕЦ РАЗРАБОТКИ!!!
+
 game.newLoop('menu', function () {
 	game.fill('#1E1E1E');
 	
@@ -1023,6 +1306,7 @@ game.newLoop('menu', function () {
 
 game.newLoop('skills', function () {
 	game.fill('#1E1E1E');
+	m2 = false
 
 	let exitskills = game.newTextObject({
 		x : width - 120, y : 20,
@@ -1175,7 +1459,7 @@ game.newLoop('pause', function () {
 
 game.newLoop('inventory', function () {
 	game.fill('#1E1E1E');
-
+	m1 = false;
 	pjs.brush.drawText({
 		x : 30, y : 20,
 		text : 'RESOURCES',
@@ -1248,6 +1532,19 @@ game.newLoop('inventory', function () {
 		size : 20, color : 'black'
 	});
 
+	hide.setPosition(point(480, 70));
+	hide.draw();
+	pjs.brush.drawRect({
+		x : 480, y : 140,
+		w : 70, h : 30,
+		fillColor : 'white'
+	});
+	pjs.brush.drawText({
+		x : 484, y : 144,
+		text : hideCount,
+		size : 20, color : 'black'
+	});
+
 	tomahawk.setPosition(point(30, 400));
 	tomahawk.draw();
 
@@ -1266,10 +1563,12 @@ game.newLoop('inventory', function () {
 	pickaxe.setPosition(point(480, 400));
 	pickaxe.draw();
 
+
+
 	if (mouse.isInObject(shield) && shieldH == false) {
 		pjs.brush.drawText({
 			x : 20, y : height - 100,
-			text : 'Craft: 15 wood, 20 stones :  + 0.5 armor',
+			text : 'Craft: 15 wood, 20 stones, 1 hide :  + 0.5 armor',
 			size : 15, color : 'white'
 		});
 		shield.setAlpha(0.7);
@@ -1290,6 +1589,19 @@ game.newLoop('inventory', function () {
 		pickaxe.setAlpha(0.9);
 	} else {
 		pickaxe.setAlpha(0.2);
+	};
+
+	if (mouse.isInObject(boots) && bootsH == false) {
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Craft: 1 wood, 2 stones, 10 coins, 8 skin :  + 0.5 speed',
+			size : 15, color : 'white'
+		});
+		boots.setAlpha(0.7);
+	} else if (bootsH) {
+		boots.setAlpha(0.9);
+	} else {
+		boots.setAlpha(0.2);
 	};
 	}
 
@@ -1323,19 +1635,21 @@ game.newLoop('inventory', function () {
 			bo.setAlpha(0.9);
 		}
 	}
-	if (stickCount >= 4 && coinCount >= 50 && robeH == false) {
+	if (stickCount >= 4 && coinCount >= 30 && hideCount >= 10 && robeH == false) {
 		if (mouse.isPeekObject('LEFT', robe)) {
 			robeH = true;
 			stickCount -= 4;
-			coinCount -= 50;
+			coinCount -= 30;
+			hideCount -= 10;
 			robe.setAlpha(0.9);
 		}
 	}
-	if (stickCount >= 10 && rockCount >= 20 && shieldH == false) {
+	if (stickCount >= 10 && rockCount >= 20 && hideCount >= 1 && shieldH == false) {
 		if (mouse.isPeekObject('LEFT', shield)) {
 			shieldH = true;
 			stickCount -= 10;
 			rockCount -= 20;
+			hideCount -= 1;
 			shield.setAlpha(0.9);
 		}
 	}
@@ -1346,6 +1660,16 @@ game.newLoop('inventory', function () {
 			rockCount -= 15;
 			coinCount -= 5;
 			pickaxe.setAlpha(0.9);
+		}
+	}
+	if (stickCount >= 1 && rockCount >= 2 && coinCount >= 10 && hideCount >= 8 && bootsH == false) {
+		if (mouse.isPeekObject('LEFT', boots)) {
+			bootsH = true;
+			stickCount -= 1;
+			rockCount -= 2;
+			coinCount -= 10;
+			hideCount -= 8;
+			boots.setAlpha(0.9);
 		}
 	}
 
@@ -1371,6 +1695,11 @@ game.newLoop('inventory', function () {
 	if (pickH) {
 		uron3 = 1;
 	}
+	if (bootsH) {
+		speed = 0.5;
+		speedpig = speed 
+	}
+
 
 	
 	if (mouse.isPeekObject('LEFT', meat) && meatCount > 0) {
@@ -1437,7 +1766,7 @@ game.newLoop('inventory', function () {
 	if (mouse.isInObject(robe) && robeH == false) {
 		pjs.brush.drawText({
 			x : 20, y : height - 100,
-			text : 'Craft: 4 wood, 50 coins:  + warm',
+			text : 'Craft: 4 wood, 30 coins, 10 hides:  + warm',
 			size : 15, color : 'white'
 		});
 		robe.setAlpha(0.7);
@@ -1496,6 +1825,16 @@ game.newLoop('inventory', function () {
 		});
 	} else {
 		mr.setAlpha(1)
+	};
+	if (mouse.isInObject(hide)) {
+		hide.setAlpha(0.7)
+		pjs.brush.drawText({
+			x : 20, y : height - 100,
+			text : 'Animal hide',
+			size : 15, color : 'white'
+		});
+	} else {
+		hide.setAlpha(1)
 	};
 	
 
@@ -1611,4 +1950,4 @@ game.newLoop('islands', function () {
 	}
 })
 
-game.startLoop('menu');
+game.startLoop('game');
